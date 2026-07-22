@@ -1,0 +1,23 @@
+# Core
+streamlit>=1.30.0
+python-dotenv>=1.0.0
+
+# Transcript extraction
+youtube-transcript-api>=0.6.1
+yt-dlp>=2024.1.1
+
+# LLM
+openai>=1.10.0
+
+# STT/TTS (Sarvam AI)
+requests>=2.31.0
+
+# Embeddings & retrieval (for chunking)
+sentence-transformers>=2.2.0
+numpy>=1.24.0
+
+# Audio handling
+pydub>=0.25.1
+
+# Local Whisper (fallback STT)
+openai-whisper>=20231117
