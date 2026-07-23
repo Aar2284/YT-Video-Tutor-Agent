@@ -210,3 +210,8 @@ async def clear_session(session_id: str):
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "sessions": len(sessions)}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
