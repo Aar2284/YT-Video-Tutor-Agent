@@ -45,11 +45,7 @@ yarn-error.log*
 # ════════════════════════════════
 # DATA (never commit raw data)
 # ════════════════════════════════
-data/raw/
-data/processed/
-*.csv
-*.json.gz
-*.parquet
+data/
 
 # ════════════════════════════════
 # dbt
