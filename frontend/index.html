@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Tutor Agent</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="sidebar-content">
+                <label class="toggle">
+                    <input type="checkbox" id="voiceToggle">
+                    <span class="toggle-slider"></span>
+                    Voice Output (TTS)
+                </label>
+                <button class="btn btn-secondary" id="clearBtn" disabled>Clear Conversation</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="main-header">
+                <h1>Video Tutor Agent</h1>
+                <p>Paste a YouTube link, get answers grounded in the video transcript.</p>
+            </header>
+
+            <section class="video-input">
+                <h2>Video Input</h2>
+                <div class="input-group">
+                    <input type="text" id="urlInput" placeholder="https://www.youtube.com/watch?v=..." />
+                    <button class="btn btn-primary" id="loadBtn">Load Video</button>
+                </div>
+                <div class="status" id="statusBar"></div>
+                <div class="transcript-info" id="transcriptInfo"></div>
+            </section>
+
+            <section class="chat-section">
+                <h2>Chat</h2>
+                <div class="chat-container" id="chatContainer">
+                    <div class="empty-state" id="emptyState">
+                        Load a video and start asking questions.
+                    </div>
+                </div>
+                <div class="chat-input-group">
+                    <input type="text" id="questionInput" placeholder="Ask a question about the video..." disabled />
+                    <button class="btn btn-primary" id="askBtn" disabled>Ask</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
