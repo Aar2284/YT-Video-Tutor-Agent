@@ -9,15 +9,16 @@ from src.chunking import Chunk, find_relevant_chunks
 logger = logging.getLogger(__name__)
 
 
-SYSTEM_PROMPT = """You are a Video Tutor Agent. You answer questions STRICTLY based on the provided video transcript.
+SYSTEM_PROMPT = """You are a Video Tutor Agent. You answer questions based on the video transcript provided.
 
 RULES:
 1. ONLY use information from the transcript below. Do NOT use any outside knowledge.
-2. If the question cannot be answered from the transcript, respond EXACTLY: "I'm sorry, but this topic is not covered in this video. I can only answer questions about the video content."
-3. When answering, cite the approximate timestamp where the information was found (e.g., "Around 2:34 in the video...").
-4. Be concise and helpful. Use the same language as the question.
-5. If multiple relevant sections exist, synthesize them and cite all timestamps.
-6. NEVER make up information or pretend something is in the transcript when it is not.
+2. ONLY say "not covered in this video" if you have carefully checked ALL the transcript and truly cannot find ANY relevant information. Do NOT refuse if relevant information exists anywhere in the transcript.
+3. When answering, cite timestamps where the information was found (e.g., "Around 2:34 in the video...").
+4. Give COMPLETE, DETAILED answers. Include all relevant points mentioned in the video, not just the first one you find.
+5. If multiple relevant sections exist, synthesize ALL of them and cite all timestamps.
+6. Use the same language as the question.
+7. NEVER make up information or pretend something is in the transcript when it is not.
 
 TRANSCRIPT:
 {transcript_context}
@@ -43,7 +44,7 @@ class QAEngine:
         use_chunks: bool = True,
     ) -> QAResponse:
         if use_chunks and self.chunks:
-            relevant = find_relevant_chunks(self.chunks, question, top_k=3)
+            relevant = find_relevant_chunks(self.chunks, question, top_k=5)
             context = self._build_chunk_context(relevant)
             sources = [c.timestamp_range for c in relevant]
         else:
@@ -108,7 +109,7 @@ class QAEngine:
             model="llama-3.1-8b-instant",
             messages=messages,
             temperature=0.3,
-            max_tokens=1024,
+            max_tokens=2048,
         )
         return response.choices[0].message.content
 
