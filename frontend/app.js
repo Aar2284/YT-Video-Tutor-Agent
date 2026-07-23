@@ -1,6 +1,4 @@
-const API_BASE = window.location.hostname === 'localhost'
-    ? 'http://localhost:8000'
-    : 'https://your-api-url.up.railway.app';
+const API_BASE = '';
 
 let sessionId = null;
 
