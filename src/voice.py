@@ -98,6 +98,7 @@ def _local_whisper_stt(audio_bytes: bytes, language: str) -> str:
 
 def _sarvam_tts(text: str, language: str) -> bytes:
     import requests
+    import base64
 
     lang_map = {
         "en": "en-IN", "hi": "hi-IN", "ta": "ta-IN", "te": "te-IN",
@@ -112,7 +113,7 @@ def _sarvam_tts(text: str, language: str) -> bytes:
         "Content-Type": "application/json",
     }
 
-    # Split long text into chunks (Sarvam has ~500 char limit)
+    # Split long text into chunks (Sarvam has ~400 char limit)
     chunks = _split_text_for_tts(text, max_chars=400)
     audio_parts = []
 
@@ -125,15 +126,21 @@ def _sarvam_tts(text: str, language: str) -> bytes:
         }
         resp = requests.post(url, headers=headers, json=payload, timeout=30)
         if resp.status_code == 200:
-            audio_parts.append(resp.content)
+            data = resp.json()
+            # Response is JSON with "audios" list containing base64 strings
+            for audio_b64 in data.get("audios", []):
+                audio_bytes = base64.b64decode(audio_b64)
+                audio_parts.append(audio_bytes)
         else:
             logger.warning(f"TTS failed for chunk: {resp.status_code} {resp.text[:200]}")
 
     if not audio_parts:
         raise RuntimeError("TTS failed for all text chunks")
 
-    # Simple concatenation (works for WAV)
-    return audio_parts[0] if len(audio_parts) == 1 else _concat_wav_parts(audio_parts)
+    # Return single audio or merge multiple
+    if len(audio_parts) == 1:
+        return audio_parts[0]
+    return _merge_wav_audio(audio_parts)
 
 
 def _split_text_for_tts(text: str, max_chars: int = 400) -> list[str]:
@@ -159,15 +166,68 @@ def _split_text_for_tts(text: str, max_chars: int = 400) -> list[str]:
     return chunks if chunks else [text[:max_chars]]
 
 
-def _concat_wav_parts(parts: list[bytes]) -> bytes:
-    """Concatenate WAV audio parts (simple approach - takes first header)."""
+def _merge_wav_audio(parts: list[bytes]) -> bytes:
+    """Merge multiple WAV audio parts into one."""
+    import struct
+
     if not parts:
         return b""
     if len(parts) == 1:
         return parts[0]
-    # For simplicity, just return the longest part
-    # Real implementation would properly merge WAV files
-    return max(parts, key=len)
+
+    # Parse WAV headers from first part
+    # RIFF header: 4 bytes "RIFF", 4 bytes size, 4 bytes "WAVE"
+    # fmt chunk: 4 bytes "fmt ", 4 bytes size, 2 bytes format, ...
+    # data chunk: 4 bytes "data", 4 bytes size, then audio data
+
+    all_data = []
+    sample_rate = None
+    bits_per_sample = None
+    num_channels = None
+
+    for part in parts:
+        if part[:4] != b'RIFF':
+            continue
+
+        # Find "fmt " chunk
+        pos = 12  # Skip RIFF header
+        fmt_data = None
+        while pos < len(part) - 8:
+            chunk_id = part[pos:pos+4]
+            chunk_size = struct.unpack('<I', part[pos+4:pos+8])[0]
+
+            if chunk_id == b'fmt ':
+                fmt_data = part[pos+8:pos+8+chunk_size]
+                num_channels = struct.unpack('<H', fmt_data[2:4])[0]
+                sample_rate = struct.unpack('<I', fmt_data[4:8])[0]
+                bits_per_sample = struct.unpack('<H', fmt_data[14:16])[0]
+            elif chunk_id == b'data':
+                audio_data = part[pos+8:pos+8+chunk_size]
+                all_data.append(audio_data)
+
+            pos += 8 + chunk_size
+            if chunk_size % 2 != 0:
+                pos += 1  # Pad to even boundary
+
+    if not all_data or not sample_rate:
+        return parts[0]  # Fallback to first part
+
+    # Merge all audio data
+    merged_data = b''.join(all_data)
+
+    # Build new WAV file
+    num_channels = num_channels or 1
+    sample_width = bits_per_sample // 8 or 2
+    byte_rate = sample_rate * num_channels * sample_width
+    data_size = len(merged_data)
+    block_align = num_channels * sample_width
+
+    header = struct.pack('<4sI4s', b'RIFF', 36 + data_size, b'WAVE')
+    fmt_chunk = struct.pack('<4sIHHIIHH', b'fmt ', 16, 1, num_channels,
+                           sample_rate, byte_rate, block_align, bits_per_sample)
+    data_header = struct.pack('<4sI', b'data', data_size)
+
+    return header + fmt_chunk + data_header + merged_data
 
 
 def _openai_tts(text: str) -> bytes:
