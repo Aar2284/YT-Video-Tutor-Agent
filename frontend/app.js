@@ -88,7 +88,7 @@ async function askQuestion() {
         }
 
         typingEl.remove();
-        addMessage('assistant', data.answer, data.sources, data.audio_base64);
+        addMessage('assistant', data.answer, data.sources, data.audio_url);
     } catch (err) {
         typingEl.remove();
         addMessage('assistant', `Error: ${err.message}`);
@@ -99,7 +99,7 @@ async function askQuestion() {
     }
 }
 
-function addMessage(role, content, sources = null, audioBase64 = null) {
+function addMessage(role, content, sources = null, audioUrl = null) {
     emptyState.style.display = 'none';
 
     const msg = document.createElement('div');
@@ -114,10 +114,10 @@ function addMessage(role, content, sources = null, audioBase64 = null) {
     }
 
     let audioHtml = '';
-    if (audioBase64) {
+    if (audioUrl) {
         audioHtml = `
             <div class="message-audio">
-                <audio controls src="data:audio/wav;base64,${audioBase64}"></audio>
+                <audio controls src="${API_BASE}${audioUrl}"></audio>
             </div>
         `;
     }

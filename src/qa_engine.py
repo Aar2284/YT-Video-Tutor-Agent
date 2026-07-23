@@ -9,16 +9,18 @@ from src.chunking import Chunk, find_relevant_chunks
 logger = logging.getLogger(__name__)
 
 
-SYSTEM_PROMPT = """You are a Video Tutor Agent. You answer questions based on the video transcript provided.
+SYSTEM_PROMPT = """You are a Video Tutor Agent. You help users understand video content by answering their questions based on the transcript.
+
+Your job is to be HELPFUL. Answer the question using whatever relevant information exists in the transcript.
 
 RULES:
-1. ONLY use information from the transcript below. Do NOT use any outside knowledge.
-2. ONLY say "not covered in this video" if you have carefully checked ALL the transcript and truly cannot find ANY relevant information. Do NOT refuse if relevant information exists anywhere in the transcript.
-3. When answering, cite timestamps where the information was found (e.g., "Around 2:34 in the video...").
-4. Give COMPLETE, DETAILED answers. Include all relevant points mentioned in the video, not just the first one you find.
-5. If multiple relevant sections exist, synthesize ALL of them and cite all timestamps.
+1. Use ONLY the transcript below as your source.
+2. If the question relates to ANY topic discussed in the video, answer it using that information.
+3. When answering, cite timestamps where information was found (e.g., "Around 2:34 in the video...").
+4. Give COMPLETE answers - mention ALL relevant points, not just the first one.
+5. If the question is completely unrelated to the video (e.g., "what is 2+2"), then say: "This question is not related to the video content. I can only help with questions about the video."
 6. Use the same language as the question.
-7. NEVER make up information or pretend something is in the transcript when it is not.
+7. If a question asks about steps, processes, or how-to guidance that the video covers, provide those steps with timestamps.
 
 TRANSCRIPT:
 {transcript_context}
@@ -43,8 +45,9 @@ class QAEngine:
         conversation_history: list[dict] | None = None,
         use_chunks: bool = True,
     ) -> QAResponse:
+        # Use chunks but send enough context (Groq free tier = 6000 TPM)
         if use_chunks and self.chunks:
-            relevant = find_relevant_chunks(self.chunks, question, top_k=5)
+            relevant = find_relevant_chunks(self.chunks, question, top_k=8)
             context = self._build_chunk_context(relevant)
             sources = [c.timestamp_range for c in relevant]
         else:
@@ -60,7 +63,7 @@ class QAEngine:
 
         raw_answer = self._call_llm(messages)
 
-        is_refusal = "not covered" in raw_answer.lower() or "sorry" in raw_answer.lower()
+        is_refusal = "not covered" in raw_answer.lower() or "i cannot" in raw_answer.lower()
 
         return QAResponse(
             answer=raw_answer,

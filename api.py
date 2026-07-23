@@ -71,7 +71,7 @@ class AskResponse(BaseModel):
     answer: str
     sources: list[str]
     is_refusal: bool
-    audio_base64: str | None = None
+    audio_url: str | None = None
 
 
 class STTRequest(BaseModel):
@@ -142,12 +142,12 @@ async def ask_question(req: AskRequest):
     )
     memory.add_assistant_message(response.answer)
 
-    audio_b64 = None
+    audio_url = None
     if req.use_voice:
         try:
-            import base64
             audio_bytes = text_to_speech(response.answer)
-            audio_b64 = base64.b64encode(audio_bytes).decode()
+            session["last_audio"] = audio_bytes
+            audio_url = f"/api/audio/{req.session_id}"
         except Exception as e:
             logger.warning(f"TTS failed: {e}")
 
@@ -155,8 +155,17 @@ async def ask_question(req: AskRequest):
         answer=response.answer,
         sources=response.sources,
         is_refusal=response.is_refusal,
-        audio_base64=audio_b64,
+        audio_url=audio_url,
     )
+
+
+@app.get("/api/audio/{session_id}")
+async def get_audio(session_id: str):
+    session = sessions.get(session_id)
+    if not session or "last_audio" not in session:
+        raise HTTPException(status_code=404, detail="No audio available.")
+    from fastapi.responses import Response
+    return Response(content=session["last_audio"], media_type="audio/wav")
 
 
 @app.post("/api/stt", response_model=STTResponse)
