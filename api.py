@@ -83,13 +83,18 @@ class STTResponse(BaseModel):
     text: str
 
 
+# --- Serve Frontend Static Files ---
+frontend_dir = Path(__file__).parent / "frontend"
+app.mount("/static", StaticFiles(directory=str(frontend_dir)), name="static")
+
+
 # --- API Endpoints ---
 
 @app.get("/")
 async def root():
-    frontend_path = Path(__file__).parent / "frontend" / "index.html"
-    if frontend_path.exists():
-        return FileResponse(frontend_path)
+    index_path = frontend_dir / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path)
     return {"message": "Video Tutor Agent API", "docs": "/docs"}
 
 
