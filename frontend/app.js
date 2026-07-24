@@ -17,9 +17,6 @@ const voiceToggle = document.getElementById('voiceToggle');
 const clearBtn = document.getElementById('clearBtn');
 const micBtn = document.getElementById('micBtn');
 
-let mediaRecorder = null;
-let audioChunks = [];
-
 // Event Listeners
 loadBtn.addEventListener('click', loadVideo);
 askBtn.addEventListener('click', askQuestion);
