@@ -1,6 +1,8 @@
 const API_BASE = '';
 
 let sessionId = null;
+let mediaRecorder = null;
+let audioChunks = [];
 
 // DOM Elements
 const urlInput = document.getElementById('urlInput');
@@ -196,33 +198,15 @@ async function toggleMic() {
 
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-        const source = audioCtx.createMediaStreamSource(stream);
-        const processor = audioCtx.createScriptProcessor(4096, 1, 1);
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        audioChunks = [];
 
-        let pcmData = [];
-        processor.onaudioprocess = (e) => {
-            const input = e.inputBuffer.getChannelData(0);
-            pcmData.push(new Float32Array(input));
-        };
-
-        source.connect(processor);
-        processor.connect(audioCtx.destination);
-
-        mediaRecorder = { state: 'recording' };
         micBtn.classList.add('recording');
-        addMessage('user', 'Recording... speak now');
 
-        const startTime = Date.now();
-        const stopRecording = () => {
-            processor.disconnect();
-            source.disconnect();
-            audioCtx.close();
+        mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+        mediaRecorder.onstop = async () => {
             stream.getTracks().forEach(t => t.stop());
-            micBtn.classList.remove('recording');
-            mediaRecorder = null;
-
-            const wavBlob = encodeWAV(pcmData, 16000);
+            const blob = new Blob(audioChunks, { type: 'audio/webm' });
             const reader = new FileReader();
             reader.onloadend = async () => {
                 const b64 = reader.result.split(',')[1];
@@ -241,7 +225,7 @@ async function toggleMic() {
                     typingEl.remove();
                     if (data.text && data.text.trim()) {
                         questionInput.value = data.text;
-                        addMessage('user', `[Voice] ${data.text}`);
+                        questionInput.focus();
                     } else {
                         addMessage('assistant', 'Could not understand the audio. Please try again.');
                     }
@@ -250,53 +234,17 @@ async function toggleMic() {
                     addMessage('assistant', `STT failed: ${err.message}`);
                 }
             };
-            reader.readAsDataURL(wavBlob);
+            reader.readAsDataURL(blob);
         };
 
-        mediaRecorder.stop = stopRecording;
-
+        mediaRecorder.start();
         setTimeout(() => {
             if (mediaRecorder && mediaRecorder.state === 'recording') {
-                stopRecording();
+                mediaRecorder.stop();
+                micBtn.classList.remove('recording');
             }
         }, 30000);
     } catch (err) {
         addMessage('assistant', 'Microphone access denied. Please allow microphone access and try again.');
     }
-}
-
-function encodeWAV(channels, sampleRate) {
-    let length = 0;
-    for (const ch of channels) length += ch.length;
-    const buffer = new ArrayBuffer(44 + length * 2);
-    const view = new DataView(buffer);
-
-    const writeStr = (offset, str) => {
-        for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-    };
-
-    writeStr(0, 'RIFF');
-    view.setUint32(4, 36 + length * 2, true);
-    writeStr(8, 'WAVE');
-    writeStr(12, 'fmt ');
-    view.setUint32(16, 16, true);
-    view.setUint16(20, 1, true);
-    view.setUint16(22, 1, true);
-    view.setUint32(24, sampleRate, true);
-    view.setUint32(28, sampleRate * 2, true);
-    view.setUint16(32, 2, true);
-    view.setUint16(34, 16, true);
-    writeStr(36, 'data');
-    view.setUint32(40, length * 2, true);
-
-    let offset = 44;
-    for (const ch of channels) {
-        for (let i = 0; i < ch.length; i++) {
-            let s = Math.max(-1, Math.min(1, ch[i]));
-            view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-            offset += 2;
-        }
-    }
-
-    return new Blob([buffer], { type: 'audio/wav' });
 }
