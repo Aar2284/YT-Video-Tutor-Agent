@@ -35,25 +35,29 @@ def _sarvam_stt(audio_bytes: bytes, language: str) -> str:
     lang_map = {
         "en": "en-IN", "hi": "hi-IN", "ta": "ta-IN", "te": "te-IN",
         "bn": "bn-IN", "mr": "mr-IN", "gu": "gu-IN", "kn": "kn-IN",
-        "ml": "ml-IN", "or": "or-IN", "pa": "pa-IN",
+        "ml": "ml-IN", "od-IN": "od-IN", "pa": "pa-IN",
     }
     sarvam_lang = lang_map.get(language, "hi-IN")
 
     url = "https://api.sarvam.ai/speech-to-text"
-    headers = {"API-Subscription-Key": SARVAM_API_KEY}
+    headers = {"api-subscription-key": SARVAM_API_KEY}
 
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+    with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as tmp:
         tmp.write(audio_bytes)
         tmp_path = tmp.name
 
     try:
         with open(tmp_path, "rb") as f:
-            files = {"file": ("audio.wav", f, "audio/wav")}
+            files = {"file": ("audio.webm", f, "audio/webm")}
             data = {
-                "model": "saarika:v2",
+                "model": "saaras:v3",
                 "language_code": sarvam_lang,
+                "input_audio_codec": "webm",
             }
             resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
+            logger.info(f"Sarvam STT response: {resp.status_code}")
+            if resp.status_code != 200:
+                logger.error(f"Sarvam STT error: {resp.text}")
             resp.raise_for_status()
             return resp.json().get("transcript", "")
     finally:
