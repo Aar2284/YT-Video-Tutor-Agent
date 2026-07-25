@@ -1,265 +1,226 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
+import asyncio
+import base64
 import io
 import logging
 import os
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Awaitable, Callable, TypeVar
 
-from src.utils import SARVAM_API_KEY, OPENAI_API_KEY
+import httpx
+
+from src.utils import OPENAI_API_KEY, SARVAM_API_KEY
 
 logger = logging.getLogger(__name__)
+STT_URL = "https://api.sarvam.ai/speech-to-text"
+TTS_URL = "https://api.sarvam.ai/text-to-speech"
+OPENAI_STT_URL = "https://api.openai.com/v1/audio/transcriptions"
+OPENAI_TTS_URL = "https://api.openai.com/v1/audio/speech"
+TIMEOUT = httpx.Timeout(30.0, connect=5.0)
+MAX_RETRIES = 3
+T = TypeVar("T")
 
 
-def speech_to_text(audio_bytes: bytes, language: str = "en") -> str:
+@dataclass(frozen=True)
+class VoiceResult:
+    """Structured, non-throwing result for provider operations."""
+    value: str | bytes
+    provider: str
+    error: str | None = None
+
+    @property
+    def ok(self) -> bool:
+        return self.error is None
+
+
+def normalize_audio(audio_bytes: bytes) -> bytes:
+    """Decode WebM/Ogg/MP3/WAV and return trimmed 16 kHz mono PCM WAV."""
+    if not audio_bytes:
+        raise ValueError("Audio payload is empty")
+    from pydub import AudioSegment
+    from pydub.silence import detect_nonsilent
+
+    audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
+    audio = audio.set_frame_rate(16_000).set_channels(1).set_sample_width(2)
+    nonsilent = detect_nonsilent(audio, min_silence_len=150, silence_thresh=-45)
+    if nonsilent:
+        start = max(0, nonsilent[0][0] - 20)
+        end = min(len(audio), nonsilent[-1][1] + 20)
+        audio = audio[start:end]
+    padding = AudioSegment.silent(duration=200, frame_rate=16_000)
+    output = io.BytesIO()
+    (padding + audio + padding).export(output, format="wav")
+    return output.getvalue()
+
+
+async def _retry(operation: Callable[[], Awaitable[T]], provider: str) -> T:
+    for attempt in range(MAX_RETRIES):
+        try:
+            return await operation()
+        except (httpx.TimeoutException, httpx.TransportError, httpx.HTTPStatusError) as exc:
+            status = exc.response.status_code if isinstance(exc, httpx.HTTPStatusError) else None
+            if not (status is None or status == 429 or status >= 500) or attempt == MAX_RETRIES - 1:
+                raise
+            retry_after = exc.response.headers.get("Retry-After") if isinstance(exc, httpx.HTTPStatusError) else None
+            delay = float(retry_after) if retry_after and retry_after.isdigit() else 0.25 * (2 ** attempt)
+            logger.warning("%s failed (%s), retrying in %.2fs", provider, status or type(exc).__name__, delay)
+            await asyncio.sleep(delay)
+    raise RuntimeError("retry loop exhausted")
+
+
+def _language(language: str) -> str:
+    languages = {"en": "en-IN", "hi": "hi-IN", "ta": "ta-IN", "te": "te-IN", "bn": "bn-IN", "mr": "mr-IN", "gu": "gu-IN", "kn": "kn-IN", "ml": "ml-IN", "or": "or-IN", "od": "or-IN", "pa": "pa-IN"}
+    return languages.get(language, "en-IN")
+
+
+async def speech_to_text_result(audio_bytes: bytes, language: str = "en") -> VoiceResult:
+    try:
+        wav = await asyncio.to_thread(normalize_audio, audio_bytes)
+    except Exception as exc:
+        logger.warning("Audio normalization failed: %s", exc)
+        return VoiceResult("", "normalizer", f"invalid audio: {exc}")
     if SARVAM_API_KEY:
-        return _sarvam_stt(audio_bytes, language)
-    elif OPENAI_API_KEY:
-        return _openai_stt(audio_bytes, language)
-    else:
-        return _local_whisper_stt(audio_bytes, language)
+        return await _sarvam_stt(wav, language)
+    if OPENAI_API_KEY:
+        return await _openai_stt(wav, language)
+    return await asyncio.to_thread(_local_whisper_stt, wav, language)
 
 
-def text_to_speech(text: str, language: str = "en") -> bytes:
+async def text_to_speech_result(text: str, language: str = "en") -> VoiceResult:
+    if not text.strip():
+        return VoiceResult(b"", "none", "text is empty")
     if SARVAM_API_KEY:
-        return _sarvam_tts(text, language)
-    elif OPENAI_API_KEY:
-        return _openai_tts(text)
-    else:
-        return _local_tts(text)
+        return await _sarvam_tts(text, language)
+    if OPENAI_API_KEY:
+        return await _openai_tts(text)
+    return await asyncio.to_thread(_local_tts, text)
 
 
-def _sarvam_stt(audio_bytes: bytes, language: str) -> str:
-    import requests
+async def speech_to_text(audio_bytes: bytes, language: str = "en") -> str:
+    """Async, non-blocking STT entry point; returns empty text on safe fallback."""
+    result = await speech_to_text_result(audio_bytes, language)
+    if result.error:
+        logger.warning("STT fallback from %s: %s", result.provider, result.error)
+    return str(result.value)
 
-    lang_map = {
-        "en": "en-IN", "hi": "hi-IN", "ta": "ta-IN", "te": "te-IN",
-        "bn": "bn-IN", "mr": "mr-IN", "gu": "gu-IN", "kn": "kn-IN",
-        "ml": "ml-IN", "od-IN": "od-IN", "pa": "pa-IN",
-    }
-    sarvam_lang = lang_map.get(language, "hi-IN")
 
-    url = "https://api.sarvam.ai/speech-to-text"
-    headers = {"api-subscription-key": SARVAM_API_KEY}
+async def text_to_speech(text: str, language: str = "en") -> bytes:
+    """Async, non-blocking TTS entry point; returns empty audio on failure."""
+    result = await text_to_speech_result(text, language)
+    if result.error:
+        logger.warning("TTS fallback from %s: %s", result.provider, result.error)
+    return bytes(result.value)
 
-    with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as tmp:
-        tmp.write(audio_bytes)
-        tmp_path = tmp.name
 
+async def _sarvam_stt(wav: bytes, language: str) -> VoiceResult:
+    async def request() -> str:
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.post(STT_URL, headers={"api-subscription-key": SARVAM_API_KEY}, files={"file": ("audio.wav", wav, "audio/wav")}, data={"model": "saaras:v3", "language_code": _language(language), "input_audio_codec": "wav"})
+            response.raise_for_status()
+            return response.json().get("transcript", "")
     try:
-        with open(tmp_path, "rb") as f:
-            files = {"file": ("audio.webm", f, "audio/webm")}
-            data = {
-                "model": "saaras:v3",
-                "language_code": sarvam_lang,
-                "input_audio_codec": "webm",
-            }
-            resp = requests.post(url, headers=headers, files=files, data=data, timeout=30)
-            logger.info(f"Sarvam STT response: {resp.status_code}")
-            if resp.status_code != 200:
-                logger.error(f"Sarvam STT error: {resp.text}")
-            resp.raise_for_status()
-            return resp.json().get("transcript", "")
-    finally:
-        os.unlink(tmp_path)
+        return VoiceResult(await _retry(request, "Sarvam STT"), "sarvam")
+    except Exception as exc:
+        return VoiceResult("", "sarvam", str(exc))
 
 
-def _openai_stt(audio_bytes: bytes, language: str) -> str:
-    from openai import OpenAI
-
-    client = OpenAI(api_key=OPENAI_API_KEY)
-
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
-        tmp.write(audio_bytes)
-        tmp_path = tmp.name
-
+async def _openai_stt(wav: bytes, language: str) -> VoiceResult:
+    async def request() -> str:
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.post(OPENAI_STT_URL, headers={"Authorization": f"Bearer {OPENAI_API_KEY}"}, files={"file": ("audio.wav", wav, "audio/wav")}, data={"model": "whisper-1", "language": language})
+            response.raise_for_status()
+            return response.json().get("text", "")
     try:
-        with open(tmp_path, "rb") as f:
-            response = client.audio.transcriptions.create(
-                model="whisper-1",
-                file=f,
-                language=language,
-            )
-        return response.text
-    finally:
-        os.unlink(tmp_path)
+        return VoiceResult(await _retry(request, "OpenAI STT"), "openai")
+    except Exception as exc:
+        return VoiceResult("", "openai", str(exc))
 
 
-def _local_whisper_stt(audio_bytes: bytes, language: str) -> str:
-    import whisper
-
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
-        tmp.write(audio_bytes)
-        tmp_path = tmp.name
-
+async def _sarvam_tts(text: str, language: str) -> VoiceResult:
+    async def request(chunk: str) -> list[bytes]:
+        async def send() -> list[bytes]:
+            payload = {"text": chunk, "model": "bulbul:v3", "speaker": "aditya", "language_code": _language(language)}
+            async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+                response = await client.post(TTS_URL, headers={"api-subscription-key": SARVAM_API_KEY}, json=payload)
+                response.raise_for_status()
+                return [base64.b64decode(item) for item in response.json().get("audios", [])]
+        return await _retry(send, "Sarvam TTS")
     try:
-        model = whisper.load_model("base")
-        result = model.transcribe(tmp_path, language=language, verbose=False)
-        return result["text"]
-    finally:
-        os.unlink(tmp_path)
+        groups = await asyncio.gather(*(request(chunk) for chunk in _split_text_for_tts(text)))
+        parts = [part for group in groups for part in group]
+        return VoiceResult(await asyncio.to_thread(_merge_wav_audio, parts), "sarvam") if parts else VoiceResult(b"", "sarvam", "provider returned no audio")
+    except Exception as exc:
+        return VoiceResult(b"", "sarvam", str(exc))
 
 
-def _sarvam_tts(text: str, language: str) -> bytes:
-    import requests
-    import base64
+async def _openai_tts(text: str) -> VoiceResult:
+    async def request() -> bytes:
+        payload = {"model": "tts-1", "voice": "alloy", "input": text, "response_format": "wav"}
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.post(OPENAI_TTS_URL, headers={"Authorization": f"Bearer {OPENAI_API_KEY}"}, json=payload)
+            response.raise_for_status()
+            return response.content
+    try:
+        return VoiceResult(await _retry(request, "OpenAI TTS"), "openai")
+    except Exception as exc:
+        return VoiceResult(b"", "openai", str(exc))
 
-    lang_map = {
-        "en": "en-IN", "hi": "hi-IN", "ta": "ta-IN", "te": "te-IN",
-        "bn": "bn-IN", "mr": "mr-IN", "gu": "gu-IN", "kn": "kn-IN",
-        "ml": "ml-IN", "or": "or-IN", "pa": "pa-IN",
-    }
-    sarvam_lang = lang_map.get(language, "hi-IN")
 
-    url = "https://api.sarvam.ai/text-to-speech"
-    headers = {
-        "API-Subscription-Key": SARVAM_API_KEY,
-        "Content-Type": "application/json",
-    }
+def _local_whisper_stt(wav: bytes, language: str) -> VoiceResult:
+    try:
+        import whisper
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+            tmp.write(wav)
+            path = tmp.name
+        try:
+            return VoiceResult(whisper.load_model("base").transcribe(path, language=language, verbose=False)["text"], "local")
+        finally:
+            os.unlink(path)
+    except Exception as exc:
+        return VoiceResult("", "local", str(exc))
 
-    # Split long text into chunks (Sarvam has ~400 char limit)
-    chunks = _split_text_for_tts(text, max_chars=400)
-    audio_parts = []
 
-    for chunk in chunks:
-        payload = {
-            "text": chunk,
-            "model": "bulbul:v3",
-            "speaker": "aditya",
-            "language_code": sarvam_lang,
-        }
-        resp = requests.post(url, headers=headers, json=payload, timeout=30)
-        if resp.status_code == 200:
-            data = resp.json()
-            # Response is JSON with "audios" list containing base64 strings
-            for audio_b64 in data.get("audios", []):
-                audio_bytes = base64.b64decode(audio_b64)
-                audio_parts.append(audio_bytes)
-        else:
-            logger.warning(f"TTS failed for chunk: {resp.status_code} {resp.text[:200]}")
-
-    if not audio_parts:
-        raise RuntimeError("TTS failed for all text chunks")
-
-    # Return single audio or merge multiple
-    if len(audio_parts) == 1:
-        return audio_parts[0]
-    return _merge_wav_audio(audio_parts)
+def _local_tts(text: str) -> VoiceResult:
+    try:
+        import pyttsx3
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+            path = tmp.name
+        engine = pyttsx3.init()
+        engine.save_to_file(text, path)
+        engine.runAndWait()
+        try:
+            return VoiceResult(Path(path).read_bytes(), "local")
+        finally:
+            os.unlink(path)
+    except Exception as exc:
+        return VoiceResult(b"", "local", str(exc))
 
 
 def _split_text_for_tts(text: str, max_chars: int = 400) -> list[str]:
-    """Split text into chunks suitable for TTS."""
-    if len(text) <= max_chars:
-        return [text]
-
-    chunks = []
-    sentences = text.replace("! ", "!|").replace(". ", ".|").replace("? ", "?|").split("|")
-
-    current = ""
-    for sentence in sentences:
-        if len(current) + len(sentence) > max_chars:
-            if current:
-                chunks.append(current.strip())
-            current = sentence
+    chunks, current = [], ""
+    for word in text.split():
+        candidate = f"{current} {word}".strip()
+        if current and len(candidate) > max_chars:
+            chunks.append(current)
+            current = word
         else:
-            current += sentence
-
-    if current.strip():
-        chunks.append(current.strip())
-
-    return chunks if chunks else [text[:max_chars]]
+            current = candidate
+    return chunks + ([current] if current else [])
 
 
 def _merge_wav_audio(parts: list[bytes]) -> bytes:
-    """Merge multiple WAV audio parts into one."""
-    import struct
-
-    if not parts:
-        return b""
-    if len(parts) == 1:
-        return parts[0]
-
-    # Parse WAV headers from first part
-    # RIFF header: 4 bytes "RIFF", 4 bytes size, 4 bytes "WAVE"
-    # fmt chunk: 4 bytes "fmt ", 4 bytes size, 2 bytes format, ...
-    # data chunk: 4 bytes "data", 4 bytes size, then audio data
-
-    all_data = []
-    sample_rate = None
-    bits_per_sample = None
-    num_channels = None
-
+    from pydub import AudioSegment
+    merged = AudioSegment.empty()
     for part in parts:
-        if part[:4] != b'RIFF':
-            continue
-
-        # Find "fmt " chunk
-        pos = 12  # Skip RIFF header
-        fmt_data = None
-        while pos < len(part) - 8:
-            chunk_id = part[pos:pos+4]
-            chunk_size = struct.unpack('<I', part[pos+4:pos+8])[0]
-
-            if chunk_id == b'fmt ':
-                fmt_data = part[pos+8:pos+8+chunk_size]
-                num_channels = struct.unpack('<H', fmt_data[2:4])[0]
-                sample_rate = struct.unpack('<I', fmt_data[4:8])[0]
-                bits_per_sample = struct.unpack('<H', fmt_data[14:16])[0]
-            elif chunk_id == b'data':
-                audio_data = part[pos+8:pos+8+chunk_size]
-                all_data.append(audio_data)
-
-            pos += 8 + chunk_size
-            if chunk_size % 2 != 0:
-                pos += 1  # Pad to even boundary
-
-    if not all_data or not sample_rate:
-        return parts[0]  # Fallback to first part
-
-    # Merge all audio data
-    merged_data = b''.join(all_data)
-
-    # Build new WAV file
-    num_channels = num_channels or 1
-    sample_width = bits_per_sample // 8 or 2
-    byte_rate = sample_rate * num_channels * sample_width
-    data_size = len(merged_data)
-    block_align = num_channels * sample_width
-
-    header = struct.pack('<4sI4s', b'RIFF', 36 + data_size, b'WAVE')
-    fmt_chunk = struct.pack('<4sIHHIIHH', b'fmt ', 16, 1, num_channels,
-                           sample_rate, byte_rate, block_align, bits_per_sample)
-    data_header = struct.pack('<4sI', b'data', data_size)
-
-    return header + fmt_chunk + data_header + merged_data
+        merged += AudioSegment.from_file(io.BytesIO(part))
+    output = io.BytesIO()
+    merged.export(output, format="wav")
+    return output.getvalue()
 
 
-def _openai_tts(text: str) -> bytes:
-    from openai import OpenAI
-
-    client = OpenAI(api_key=OPENAI_API_KEY)
-    response = client.audio.speech.create(
-        model="tts-1",
-        voice="alloy",
-        input=text,
-    )
-    return response.content
-
-
-def _local_tts(text: str) -> bytes:
-    try:
-        import pyttsx3
-
-        engine = pyttsx3.init()
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
-            tmp_path = tmp.name
-
-        engine.save_to_file(text, tmp_path)
-        engine.runAndWait()
-
-        audio_bytes = Path(tmp_path).read_bytes()
-        os.unlink(tmp_path)
-        return audio_bytes
-    except Exception:
-        logger.warning("Local TTS not available. Returning empty audio.")
-        return b""
+def run_sync(coro: Awaitable[T]) -> T:
+    """Use only from synchronous UI code; FastAPI handlers should await directly."""
+    return asyncio.run(coro)
