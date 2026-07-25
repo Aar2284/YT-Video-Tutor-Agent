@@ -173,9 +173,12 @@ async def speech_to_text_endpoint(req: STTRequest):
     try:
         import base64
         audio_bytes = base64.b64decode(req.audio_base64)
+        logger.info(f"STT request: {len(audio_bytes)} bytes, format: {audio_bytes[:4]}")
         text = speech_to_text(audio_bytes, req.language)
+        logger.info(f"STT result: '{text[:100]}'")
         return STTResponse(text=text)
     except Exception as e:
+        logger.error(f"STT error: {e}")
         raise HTTPException(status_code=500, detail=f"STT failed: {str(e)}")
 
 
