@@ -7,16 +7,16 @@ from src.transcript import fetch_transcript, save_transcript, load_transcript, T
 from src.chunking import chunk_transcript
 from src.qa_engine import QAEngine
 from src.memory import ConversationMemory
-from src.voice import speech_to_text, text_to_speech
+from src.voice import run_sync, speech_to_text, text_to_speech
 from src.utils import DATA_DIR
 
 st.set_page_config(
     page_title="Video Tutor Agent",
-    page_icon="🎓",
+    page_icon="\U0001F393",
     layout="wide",
 )
 
-st.title("🎓 Video Tutor Agent")
+st.title("\U0001F393 Video Tutor Agent")
 st.caption("Paste a YouTube link, get answers grounded in the video transcript.")
 
 if "memory" not in st.session_state:
@@ -84,7 +84,7 @@ with col2:
         audio_bytes = st.audio_input("Ask a question by voice")
         if audio_bytes:
             with st.spinner("Transcribing..."):
-                user_input = speech_to_text(audio_bytes)
+                user_input = run_sync(speech_to_text(audio_bytes))
                 st.write(f"You said: {user_input}")
 
     text_input = st.chat_input("Ask a question about the video...")
@@ -113,7 +113,7 @@ with col2:
 
                     if enable_tts:
                         with st.spinner("Generating audio..."):
-                            tts_bytes = text_to_speech(response.answer)
+                            tts_bytes = run_sync(text_to_speech(response.answer))
                             if tts_bytes:
                                 st.audio(tts_bytes, format="audio/wav")
 
