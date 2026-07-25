@@ -88,6 +88,20 @@ frontend_dir = Path(__file__).parent / "frontend"
 app.mount("/static", StaticFiles(directory=str(frontend_dir)), name="static")
 
 
+# --- Utility Endpoints for Browser/DevTools Requests ---
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    from fastapi.responses import Response
+    return Response(status_code=204)
+
+
+@app.get("/.well-known/appspecific/com.chrome.devtools.json", include_in_schema=False)
+async def chrome_devtools():
+    from fastapi.responses import Response
+    return Response(status_code=204)
+
+
 # --- API Endpoints ---
 
 @app.get("/")
