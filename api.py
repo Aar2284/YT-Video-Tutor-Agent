@@ -159,7 +159,7 @@ async def ask_question(req: AskRequest):
     audio_url = None
     if req.use_voice:
         try:
-            audio_bytes = text_to_speech(response.answer)
+            audio_bytes = await text_to_speech(response.answer)
             session["last_audio"] = audio_bytes
             audio_url = f"/api/audio/{req.session_id}"
         except Exception as e:
@@ -188,7 +188,7 @@ async def speech_to_text_endpoint(req: STTRequest):
         import base64
         audio_bytes = base64.b64decode(req.audio_base64)
         logger.info(f"STT request: {len(audio_bytes)} bytes, format: {audio_bytes[:4]}")
-        text = speech_to_text(audio_bytes, req.language)
+        text = await speech_to_text(audio_bytes, req.language)
         logger.info(f"STT result: '{text[:100]}'")
         return STTResponse(text=text)
     except Exception as e:
@@ -211,7 +211,7 @@ async def text_to_speech_endpoint(req: AskRequest):
 
     try:
         import base64
-        audio_bytes = text_to_speech(last_answer)
+        audio_bytes = await text_to_speech(last_answer)
         return {"audio_base64": base64.b64encode(audio_bytes).decode()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"TTS failed: {str(e)}")
