@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-transcripts: dict[str, str] = {}
+transcripts: dict[tuple[int, str], str] = {}
 
 
 @app.on_event("startup")
@@ -210,27 +210,29 @@ def get_transcript_proxy(video_id: str, request: Request):
 
 @app.post("/api/ingest")
 def ingest(req: IngestRequest, request: Request):
-    get_current_user_id(request)
-    if req.video_id not in transcripts:
+    user_id = get_current_user_id(request)
+    key = (user_id, req.video_id)
+    if key not in transcripts:
         if req.transcript:
-            transcripts[req.video_id] = req.transcript
+            transcripts[key] = req.transcript
         else:
             try:
-                transcripts[req.video_id] = get_transcript(req.video_id)
+                transcripts[key] = get_transcript(req.video_id)
             except Exception as e:
                 raise HTTPException(500, detail=f"Failed to get transcript: {e}")
-    return {"status": "ok", "video_id": req.video_id, "length": len(transcripts[req.video_id])}
+    return {"status": "ok", "video_id": req.video_id, "length": len(transcripts[key])}
 
 
 @app.post("/api/chat")
 def chat_endpoint(req: ChatRequest, request: Request):
-    get_current_user_id(request)
-    if req.video_id not in transcripts:
+    user_id = get_current_user_id(request)
+    key = (user_id, req.video_id)
+    if key not in transcripts:
         try:
-            transcripts[req.video_id] = get_transcript(req.video_id)
+            transcripts[key] = get_transcript(req.video_id)
         except Exception:
-            transcripts[req.video_id] = ""
-    context = transcripts[req.video_id]
+            transcripts[key] = ""
+    context = transcripts[key]
     answer = chat(req.message, req.thread_id, context)
     return {"answer": answer, "thread_id": req.thread_id}
 
