@@ -26,10 +26,10 @@ build/
 *.log
 
 # ════════════════════════════════
-# JUPYTER NOTEBOOKS
+# BACKEND DATA
 # ════════════════════════════════
-notebooks/.ipynb_checkpoints/
-*.ipynb_checkpoints
+backend/data/
+*.db
 
 # ════════════════════════════════
 # NODE / NEXT.JS (frontend)
@@ -41,42 +41,23 @@ out/
 *.tsbuildinfo
 npm-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
 # ════════════════════════════════
-# DATA (never commit raw data)
+# FRONTEND SPECIFIC
 # ════════════════════════════════
-data/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
 
 # ════════════════════════════════
-# dbt
+# AI AGENT CONFIGS
 # ════════════════════════════════
-services/analytics/target/
-services/analytics/dbt_packages/
-services/analytics/logs/
-
-# ════════════════════════════════
-# AIRFLOW
-# ════════════════════════════════
-infrastructure/airflow/logs/
-infrastructure/airflow/plugins/__pycache__/
-
-# ════════════════════════════════
-# DOCKER
-# ════════════════════════════════
-*.override.yml             # Local docker-compose overrides
-
-# ════════════════════════════════
-# TERRAFORM
-# ════════════════════════════════
-infrastructure/terraform/.terraform/
-infrastructure/terraform/*.tfstate
-infrastructure/terraform/*.tfstate.backup
-infrastructure/terraform/*.tfvars   # Contains real credentials
-
-# ════════════════════════════════
-# GREAT EXPECTATIONS
-# ════════════════════════════════
-great_expectations/uncommitted/
+.agents/
+.claude/
 
 # ════════════════════════════════
 # OS FILES
@@ -89,9 +70,7 @@ Screenshot*.png
 # ════════════════════════════════
 # IDE
 # ════════════════════════════════
-.vscode/settings.json     # Keep .vscode/extensions.json (share recommendations)
+.vscode/settings.json
 .idea/
 *.swp
 *.swo
-
-rd.md
