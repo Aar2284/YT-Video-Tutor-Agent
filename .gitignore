@@ -58,6 +58,14 @@ frontend/next-env.d.ts
 # ════════════════════════════════
 .agents/
 .claude/
+AGENTS.md
+CLAUDE.md
+
+# ════════════════════════════════
+# DEPLOYMENT
+# ════════════════════════════════
+.vercel/
+.vercelignore
 
 # ════════════════════════════════
 # OS FILES
