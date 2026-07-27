@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 
-const PYTHON_BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+
+const PYTHON_BACKEND = "";
 
 interface Message {
   role: "user" | "assistant";
@@ -31,9 +32,21 @@ function ChatInner() {
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [initError, setInitError] = useState("");
-  const [threadId] = useState(() => crypto.randomUUID());
+  const [threadId] = useState(() => {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID();
+    }
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  });
   const [recording, setRecording] = useState(false);
   const [speakingIdx, setSpeakingIdx] = useState<number | null>(null);
+  const [ttsLoading, setTtsLoading] = useState(false);
+  const [ttsError, setTtsError] = useState<string | null>(null);
+  const ttsRequestIdRef = useRef(0);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -43,15 +56,28 @@ function ChatInner() {
   useEffect(() => { checkAuth(); }, [checkAuth]);
   useEffect(() => { if (!authLoading && !user) router.replace("/login"); }, [user, authLoading, router]);
 
-  // Pre-warm transcript on mount
+  // Pre-warm transcript on mount (fetch via server-side proxy)
   useEffect(() => {
     if (!user || !videoId) return;
-    api("/api/ingest", { method: "POST", body: JSON.stringify({ video_id: videoId }) })
-      .then(() => setInitializing(false))
-      .catch((err) => {
+    (async () => {
+      try {
+        let transcriptText = "";
+        try {
+          const res = await api(`/api/transcript?video_id=${videoId}`);
+          transcriptText = res.transcript || "";
+        } catch (transcriptErr) {
+          console.warn("Transcript fetch failed:", transcriptErr);
+        }
+        await api("/api/ingest", {
+          method: "POST",
+          body: JSON.stringify({ video_id: videoId, transcript: transcriptText || undefined }),
+        });
+        setInitializing(false);
+      } catch (err) {
         setInitError(err instanceof Error ? err.message : "Failed to load video");
         setInitializing(false);
-      });
+      }
+    })();
   }, [user, videoId]);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
@@ -97,7 +123,7 @@ function ChatInner() {
         formData.append("file", file);
         try {
           const token = localStorage.getItem("token");
-          const res = await fetch(`${PYTHON_BACKEND}/api/stt`, {
+          const res = await fetch(`/api/proxy/api/stt`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
             body: formData,
@@ -116,8 +142,8 @@ function ChatInner() {
 
   // ── TTS: Play assistant message ─────────────────────────────────────────
 
-  // Ref to track current blob URL for cleanup
   const blobUrlRef = useRef<string | null>(null);
+  const ttsCacheRef = useRef<Map<string, string>>(new Map());
 
   function stopCurrentAudio() {
     if (audioRef.current) {
@@ -133,36 +159,68 @@ function ChatInner() {
   }
 
   useEffect(() => {
-    return () => stopCurrentAudio();
+    return () => {
+      stopCurrentAudio();
+      ttsCacheRef.current.forEach((url) => URL.revokeObjectURL(url));
+      ttsCacheRef.current.clear();
+    };
   }, []);
 
+  function ttsKey(text: string) { return text.slice(0, 2500); }
+
   async function playTTS(text: string, idx: number) {
-    if (speakingIdx === idx) {
-      stopCurrentAudio();
+    if (speakingIdx === idx && audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      return;
+    }
+    if (speakingIdx === idx && audioRef.current && audioRef.current.paused) {
+      audioRef.current.play();
       return;
     }
     stopCurrentAudio();
+    if (ttsLoading) return;
+    setTtsError(null);
+    const key = ttsKey(text);
+    const cached = ttsCacheRef.current.get(key);
+    if (cached) {
+      const audio = new Audio(cached);
+      audioRef.current = audio;
+      blobUrlRef.current = null;
+      setSpeakingIdx(idx);
+      audio.onended = () => setSpeakingIdx(null);
+      audio.play();
+      return;
+    }
+    setTtsLoading(true);
+    const requestId = ++ttsRequestIdRef.current;
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${PYTHON_BACKEND}/api/tts`, {
+      const res = await fetch(`/api/proxy/api/tts`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ text: text.slice(0, 2500), language: "en-IN", speaker: "shubh" }),
+        body: JSON.stringify({ text: key, language: "en-IN", speaker: "shubh" }),
       });
-      if (!res.ok) return;
+      if (requestId !== ttsRequestIdRef.current) return;
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({ detail: "TTS failed" }));
+        setTtsLoading(false);
+        setTtsError(errBody.detail || "TTS failed");
+        setTimeout(() => setTtsError(null), 4000);
+        return;
+      }
       const blob = await res.blob();
+      if (requestId !== ttsRequestIdRef.current) return;
       const url = URL.createObjectURL(blob);
-      blobUrlRef.current = url;
+      ttsCacheRef.current.set(key, url);
       const audio = new Audio(url);
       audioRef.current = audio;
       setSpeakingIdx(idx);
-      audio.onended = () => {
-        setSpeakingIdx(null);
-        URL.revokeObjectURL(url);
-        blobUrlRef.current = null;
-      };
+      setTtsLoading(false);
+      audio.onended = () => setSpeakingIdx(null);
       audio.play();
-    } catch {}
+    } catch {
+      if (requestId === ttsRequestIdRef.current) setTtsLoading(false);
+    }
   }
 
   if (authLoading || !user) {
@@ -208,23 +266,31 @@ function ChatInner() {
                   {msg.content}
                 </div>
                 {msg.role === "assistant" && (
-                  <button
-                    onClick={() => playTTS(msg.content, i)}
-                    className={`shrink-0 h-7 w-7 rounded-full flex items-center justify-center transition-colors ${
-                      speakingIdx === i ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                    }`}
-                    title={speakingIdx === i ? "Stop" : "Read aloud"}
-                  >
-                    {speakingIdx === i ? (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-                    ) : (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-                      </svg>
+                  <div className="flex flex-col items-center gap-1">
+                    <button
+                      onClick={() => playTTS(msg.content, i)}
+                      disabled={ttsLoading && speakingIdx !== i}
+                      className={`shrink-0 h-7 w-7 rounded-full flex items-center justify-center transition-colors ${
+                        speakingIdx === i ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      } ${ttsLoading && speakingIdx !== i ? "opacity-40 cursor-not-allowed" : ""}`}
+                      title={speakingIdx === i ? "Pause" : ttsLoading ? "Loading audio..." : "Read aloud"}
+                    >
+                      {ttsLoading && speakingIdx !== i ? (
+                        <div className="h-3 w-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      ) : speakingIdx === i ? (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                      ) : (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                        </svg>
+                      )}
+                    </button>
+                    {ttsError && speakingIdx !== i && (
+                      <span className="text-[10px] text-destructive whitespace-nowrap">{ttsError}</span>
                     )}
-                  </button>
+                  </div>
                 )}
               </div>
             </div>
