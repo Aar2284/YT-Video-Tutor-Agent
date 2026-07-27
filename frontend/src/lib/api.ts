@@ -1,14 +1,18 @@
-const API = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-
 export async function api(path: string, options: RequestInit = {}) {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
     ...(options.headers as Record<string, string> || {}),
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(`${API}${path}`, { ...options, headers });
+  const isFormData = options.body instanceof FormData;
+  if (isFormData) {
+    delete headers["Content-Type"];
+  } else if (!headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  const res = await fetch(`/api/proxy${path}`, { ...options, headers });
   if (res.status === 401) {
     localStorage.removeItem("token");
     window.location.href = "/login";
@@ -18,5 +22,7 @@ export async function api(path: string, options: RequestInit = {}) {
     const body = await res.json().catch(() => ({ detail: "Request failed" }));
     throw new Error(body.detail || "Request failed");
   }
-  return res.json();
+  const ct = res.headers.get("content-type") || "";
+  if (ct.includes("application/json")) return res.json();
+  return res.blob();
 }
