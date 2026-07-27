@@ -6,13 +6,14 @@ from .database import init_db, get_db
 from .auth import hash_password, verify_password, create_token, get_current_user_id
 from .transcript import get_transcript
 from .graph import chat
-from .speech import speech_to_text, text_to_speech
+from .speech import speech_to_text, text_to_speech, SpeechError
 import re
+import httpx
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "http://3.110.159.149:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -181,6 +182,7 @@ def delete_video(video_row_id: int, request: Request):
 
 class IngestRequest(BaseModel):
     video_id: str
+    transcript: str | None = None
 
 
 class ChatRequest(BaseModel):
@@ -189,11 +191,34 @@ class ChatRequest(BaseModel):
     video_id: str
 
 
+import os
+SUPADATA_KEY = os.getenv("SUPADATA_KEY", "")
+
+
+@app.get("/api/transcript")
+def get_transcript_proxy(video_id: str, request: Request):
+    get_current_user_id(request)
+    resp = httpx.get(
+        f"https://api.supadata.ai/v1/youtube/transcript?videoId={video_id}&text=true",
+        headers={"x-api-key": SUPADATA_KEY},
+        timeout=30,
+    )
+    if resp.status_code != 200:
+        raise HTTPException(502, detail=f"Transcript API error: {resp.text[:200]}")
+    return {"transcript": resp.text}
+
+
 @app.post("/api/ingest")
 def ingest(req: IngestRequest, request: Request):
     get_current_user_id(request)
     if req.video_id not in transcripts:
-        transcripts[req.video_id] = get_transcript(req.video_id)
+        if req.transcript:
+            transcripts[req.video_id] = req.transcript
+        else:
+            try:
+                transcripts[req.video_id] = get_transcript(req.video_id)
+            except Exception as e:
+                raise HTTPException(500, detail=f"Failed to get transcript: {e}")
     return {"status": "ok", "video_id": req.video_id, "length": len(transcripts[req.video_id])}
 
 
@@ -236,7 +261,10 @@ class TTSRequest(BaseModel):
 @app.post("/api/tts")
 async def tts(req: TTSRequest, request: Request):
     get_current_user_id(request)
-    audio_bytes = await text_to_speech(req.text, req.language, req.speaker)
+    try:
+        audio_bytes = await text_to_speech(req.text, req.language, req.speaker)
+    except SpeechError as e:
+        raise HTTPException(e.status_code, detail=e.detail)
     if not audio_bytes:
         raise HTTPException(500, "TTS failed")
     return Response(content=audio_bytes, media_type="audio/wav")
