@@ -1,88 +1,74 @@
-# ════════════════════════════════
-# ENVIRONMENT & SECRETS
-# ════════════════════════════════
-.env
-.env.local
-.env.production
-.env.staging
-
-# ════════════════════════════════
-# PYTHON
-# ════════════════════════════════
+# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
+*$py.class
+*.so
 .Python
+env/
 venv/
 .venv/
-env/
 *.egg-info/
 dist/
 build/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-*.log
+*.egg
 
-# ════════════════════════════════
-# BACKEND DATA
-# ════════════════════════════════
-backend/data/
-*.db
-
-# ════════════════════════════════
-# NODE / NEXT.JS (frontend)
-# ════════════════════════════════
+# ── Node.js / Next.js ────────────────────────────────────────────────────────
 node_modules/
 .next/
 out/
-.cache/
 *.tsbuildinfo
 npm-debug.log*
+yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# ════════════════════════════════
-# FRONTEND SPECIFIC
-# ════════════════════════════════
-frontend/node_modules/
-frontend/.next/
-frontend/out/
-frontend/.vercel
-frontend/*.tsbuildinfo
-frontend/next-env.d.ts
+# ── Environment Variables ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# ════════════════════════════════
-# AI AGENT CONFIGS
-# ════════════════════════════════
-.agents/
-.claude/
-AGENTS.md
-CLAUDE.md
+# ── Database ──────────────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+backend/data/
 
-# ════════════════════════════════
-# DEPLOYMENT
-# ════════════════════════════════
-.vercel/
-.vercelignore
-
-# ════════════════════════════════
-# OS FILES
-# ════════════════════════════════
-.DS_Store
-Thumbs.db
-desktop.ini
-Screenshot*.png
-transcriptroot.py
-skills-lock.json
-approach.txt
-problems.txt
-
-# ════════════════════════════════
-# IDE
-# ════════════════════════════════
-.vscode/settings.json
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
 .idea/
 *.swp
 *.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+nohup.out
+logs/
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+*.cover
+
+# ── Temporary Files ───────────────────────────────────────────────────────────
+*.tmp
+*.bak
+*.mp4
+*.mp3
+*.wav
+!backend/data/.gitkeep
