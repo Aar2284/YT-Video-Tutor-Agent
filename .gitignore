@@ -72,3 +72,4 @@ coverage/
 *.mp3
 *.wav
 !backend/data/.gitkeep
+transcriptroot.py
