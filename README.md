@@ -1,6 +1,6 @@
 # 🎓 AI Tutor — YouTube Video Tutor Agent
 
-> Chat with any YouTube video. Ask questions, get answers **grounded in the transcript**, speak naturally with voice I/O, and get help in **11 Indian languages**.
+> Chat with any YouTube video. Ask questions, get answers **grounded in the transcript**, and speak naturally with **voice I/O** (Indic STT + English TTS).
 
 <p align="center">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white" />
