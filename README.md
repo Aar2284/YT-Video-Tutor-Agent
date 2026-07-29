@@ -37,9 +37,9 @@
 | 📝 **Transcript Extraction** | Captions-first via `youtube-transcript-api`, fallback to audio download + Groq Whisper |
 | 🤖 **Grounded Q&A** | LangGraph pipeline — answers only from the transcript, refuses out-of-scope questions |
 | 🧠 **Multi-turn Memory** | Thread-based conversation memory persists across messages |
-| 🎤 **Voice Input** | Browser mic → Sarvam AI Saaras v3 (STT) — speak your question |
-| 🔊 **Voice Output** | Deepgram Aura (TTS) — hear the answer spoken aloud |
-| 🌍 **11 Indic Languages** | Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, Odia, Punjabi |
+| 🎤 **Voice Input** | Browser mic → Sarvam AI Saaras v3 (STT) — auto-detects Indian languages |
+| 🔊 **Voice Output** | Deepgram Aura (TTS) — hear the answer spoken aloud (English) |
+| 🌍 **Indic STT** | Sarvam Saaras v3 auto-detects Indian languages (Hindi, Tamil, Telugu, etc.) |
 | 🔐 **JWT Authentication** | Secure multi-user with bcrypt passwords + 72h token expiry |
 | 🎬 **Video Management** | Add/list/delete videos — auto-fetches title & thumbnail |
 | 🌑 **Dark Mode UI** | Beautiful dark theme with shadcn/ui components |
@@ -58,7 +58,7 @@
 | 🧠 LLM | **Groq** (llama-3.3-70b-versatile) | Fast LLM inference |
 | 📝 Transcript | **youtube-transcript-api** | Free caption extraction |
 | 🎤 Fallback STT | **Groq Whisper** (whisper-large-v3) | Audio transcription |
-| 🗣️ Voice | **Sarvam AI** + **Deepgram** | Indic STT (Saaras v3) + TTS (Aura) |
+| 🗣️ Voice | **Sarvam AI** + **Deepgram** | Indic STT (Saaras v3) + English TTS (Aura) |
 | 🗄️ Database | **SQLite** (WAL mode) | User & video storage |
 | 🔐 Auth | **PyJWT** + **bcrypt** | JWT tokens + password hashing |
 | 📡 HTTP | **httpx** (async) | API calls |
