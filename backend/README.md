@@ -378,15 +378,15 @@ curl -X POST http://localhost:8000/api/tts \
   -H "Content-Type: application/json" \
   -d '{"text": "Hello world", "language": "en-IN", "speaker": "shubh"}'
 
-# Supported languages
-# en-IN, hi-IN, ta-IN, te-IN, bn-IN, mr-IN, gu-IN, kn-IN, ml-IN, or-IN, pa-IN
+# Supported languages (STT auto-detects via Sarvam; TTS currently English-only)
+# en-IN
 ```
 
 **TTS parameters:**
 
 | Param | Default | Options |
 |-------|---------|---------|
-| `language` | `en-IN` | `en-IN`, `hi-IN`, `ta-IN`, `te-IN`, `bn-IN`, etc. |
+| `language` | `en-IN` | `en-IN` (TTS English-only; STT auto-detects via Sarvam) |
 | `speaker` | `shubh` | `shubh`, `meera` |
 
 ---
