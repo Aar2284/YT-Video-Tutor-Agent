@@ -572,19 +572,23 @@ Click 🔊 on assistant message
 
 ### Supported Languages
 
-| Code | Language |
-|------|----------|
-| `en-IN` | English |
-| `hi-IN` | Hindi |
-| `ta-IN` | Tamil |
-| `te-IN` | Telugu |
-| `bn-IN` | Bengali |
-| `mr-IN` | Marathi |
-| `gu-IN` | Gujarati |
-| `kn-IN` | Kannada |
-| `ml-IN` | Malayalam |
-| `or-IN` | Odia |
-| `pa-IN` | Punjabi |
+**TTS (Text-to-Speech):** English only (`en-IN`) — Deepgram Aura
+
+**STT (Speech-to-Text):** Auto-detects Indian languages via Sarvam Saaras v3
+
+| Code | Language | STT Support |
+|------|----------|:-----------:|
+| `en-IN` | English | ✅ |
+| `hi-IN` | Hindi | ✅ |
+| `ta-IN` | Tamil | ✅ |
+| `te-IN` | Telugu | ✅ |
+| `bn-IN` | Bengali | ✅ |
+| `mr-IN` | Marathi | ✅ |
+| `gu-IN` | Gujarati | ✅ |
+| `kn-IN` | Kannada | ✅ |
+| `ml-IN` | Malayalam | ✅ |
+| `or-IN` | Odia | ✅ |
+| `pa-IN` | Punjabi | ✅ |
 
 ---
 
