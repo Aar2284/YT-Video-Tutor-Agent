@@ -9,6 +9,8 @@
   <img src="https://img.shields.io/badge/Groq-FF6B00?style=flat&logoColor=white" />
   <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black" />
   <img src="https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white" />
+  <img src="https://img.shields.io/badge/Deepgram-00E878?style=flat&logo=deepgram&logoColor=black" />
+  <img src="https://img.shields.io/badge/Sarvam_AI-023047?style=flat&logoColor=white" />
 </p>
 
 ---
