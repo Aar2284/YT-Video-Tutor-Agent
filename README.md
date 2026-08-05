@@ -2,6 +2,8 @@
 
 > Chat with any YouTube video. Ask questions, get answers **grounded in the transcript**, and speak naturally with **voice I/O** (Indic STT + English TTS).
 
+Built as a full-stack AI application using **FastAPI** (backend), **Next.js 16** (frontend), **LangGraph** (conversation pipeline), and **Groq** (fast LLM inference). Supports multi-user authentication, video management, and voice-based interaction with Indian language speech recognition.
+
 <p align="center">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white" />
   <img src="https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white" />
@@ -144,27 +146,26 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-aaryan-codebase/
+YT-Video-Tutor-Agent/
 │
 ├── 📄 README.md                    # This file
 ├── 📄 .env.example                 # API key template
 ├── 📄 .gitignore                   # Git ignore rules
 ├── 📄 LICENSE                      # MIT License
-├── 📄 transcript.py                # Standalone CLI transcript fetcher
 │
 ├── 📂 backend/                     # 🐍 Python FastAPI backend
 │   ├── 📄 README.md                # Backend documentation
 │   ├── 📄 requirements.txt         # Python dependencies
-│   ├── 📂 data/                    # SQLite database (auto-created)
-│   └── 📂 app/
-│       ├── 📄 config.py            # ⚙️  Environment & constants
-│       ├── 📄 auth.py              # 🔐 Password hashing + JWT
-│       ├── 📄 database.py          # 🗄️  SQLite schema & operations
-│       ├── 📄 llm.py               # 🧠 Groq LLM factory
-│       ├── 📄 graph.py             # 🤖 LangGraph chat pipeline
-│       ├── 📄 transcript.py        # 📝 Transcript extraction
-│       ├── 📄 speech.py            # 🎤 STT / TTS (Sarvam + Deepgram)
-│       └── 📄 main.py              # 🌐 FastAPI app & endpoints
+│   ├── 📂 app/
+│   │   ├── 📄 config.py            # ⚙️  Environment & constants
+│   │   ├── 📄 auth.py              # 🔐 Password hashing + JWT
+│   │   ├── 📄 database.py          # 🗄️  SQLite schema & operations
+│   │   ├── 📄 llm.py               # 🧠 Groq LLM factory
+│   │   ├── 📄 graph.py             # 🤖 LangGraph chat pipeline
+│   │   ├── 📄 transcript.py        # 📝 Transcript extraction
+│   │   ├── 📄 speech.py            # 🎤 STT / TTS (Sarvam + Deepgram)
+│   │   └── 📄 main.py              # 🌐 FastAPI app & endpoints
+│   └── 📂 data/                    # SQLite database (auto-created)
 │
 ├── 📂 frontend/                    # ⚛️  Next.js React frontend
 │   ├── 📄 package.json             # Node dependencies
@@ -180,15 +181,14 @@ aaryan-codebase/
 │       │   ├── 📂 dashboard/       # 🎬 Video grid + management
 │       │   └── 📂 chat/            # 💬 Chat UI with voice I/O
 │       ├── 📂 components/
-│       │   ├── 📂 assistant-ui/    # 🤖 8 chat components
-│       │   └── 📂 ui/              # 🎨 11 shadcn components
+│       │   ├── 📂 assistant-ui/    # 🤖 Chat components
+│       │   └── 📂 ui/              # 🎨 shadcn components
 │       └── 📂 lib/
 │           ├── 📄 api.ts           # 📡 Fetch wrapper + auth
 │           ├── 📄 auth.ts          # 🔐 Zustand auth store
 │           └── 📄 utils.ts         # 🔧 cn() helper
 │
-└── 📂 tests/                       # 🧪 Test suite
-    ├── 📄 README.md                # Test documentation
+└── 📂 tests/                       # 🧪 Test suite (29 tests)
     ├── 📄 conftest.py              # 🔧 Shared fixtures
     ├── 📄 test_config.py           # ⚙️  Config tests
     ├── 📄 test_auth.py             # 🔐 Auth tests
@@ -406,8 +406,9 @@ py -3 -m pytest tests/ -k "register" -v
 | `test_auth.py` | 6 | 🔐 bcrypt hashing, JWT lifecycle, auth middleware |
 | `test_database.py` | 2 | 🗄️ Schema creation, context manager |
 | `test_transcript.py` | 7 | 📝 URL parsing, video ID extraction |
-| `test_graph.py` | 3 | 🤖 LLM state definition, system prompt |
-| `test_main.py` | 10 | 🌐 All API endpoints — auth, videos, chat |
+| `test_graph.py` | 4 | 🤖 LLM state definition, system prompt |
+| `test_main.py` | 7 | 🌐 API endpoints — auth, videos, chat |
+| **Total** | **29** | |
 
 > 📖 See [tests/README.md](tests/README.md) for detailed test documentation
 
@@ -476,6 +477,15 @@ User adds YouTube URL
 │       → WAV audio               │
 │       → Play in browser         │
 └─────────────────────────────────┘
+
+┌─────────────────────────────────┐
+│  🎤 Optional Voice Input        │
+│                                 │
+│  Browser mic → WAV              │
+│       → Sarvam Saaras v3        │
+│       → Transcribed text        │
+│       → Auto-send as message    │
+└─────────────────────────────────┘
 ```
 
 ---
@@ -488,6 +498,8 @@ User adds YouTube URL
 | 2 | 🗄️ SQLite — not ideal for high-concurrency production | ⚠️ Fine for dev |
 | 3 | 🔒 CORS locked to `localhost:3000` | 🔧 Edit `main.py` to change |
 | 4 | 🤖 No tool-use / web search in LLM pipeline | 📋 Future enhancement |
+| 5 | 🔊 TTS limited to English (Deepgram Aura) | 📋 Future: add multilingual TTS |
+| 6 | 🎤 STT auto-detects language (no user selection) | 📋 Future: add language picker |
 
 ---
 

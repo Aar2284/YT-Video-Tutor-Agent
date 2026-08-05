@@ -563,8 +563,9 @@ Tier 2: Groq Whisper (PAID, slow)
   └── Clean up temp file
 ```
 
-**Transcript caching:** In-memory `dict` in `main.py`
+**Transcript caching:** In-memory `dict` in `main.py`, scoped per user
 - ⚡ Fast on repeat requests
+- 🔒 Transcripts isolated per user (`dict[(user_id, video_id)]`)
 - 💥 Lost on server restart (not persisted)
 
 ---
@@ -645,8 +646,8 @@ py -3 -m pytest tests/ -k "register" -v
 | `graph.py` | 40 | 🤖 LangGraph pipeline |
 | `transcript.py` | 47 | 📝 Transcript extraction |
 | `speech.py` | 46 | 🎤 STT / TTS |
-| `main.py` | 269 | 🌐 FastAPI app + endpoints |
-| **Total** | **507** | |
+| `main.py` | 219 | 🌐 FastAPI app + endpoints |
+| **Total** | **414** | |
 
 ---
 

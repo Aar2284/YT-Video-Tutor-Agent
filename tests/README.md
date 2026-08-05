@@ -1,6 +1,6 @@
 # 🧪 Test Suite — YT Video Tutor Agent
 
-> **6 test files** | **31 tests** | **100% modules covered**
+> **6 test files** | **29 tests** | **100% modules covered**
 
 ---
 
@@ -12,8 +12,8 @@
 | 2 | 🔐 [test_auth.py](#-test_authpy) | 6 | Password hashing & JWT tokens |
 | 3 | 🗄️ [test_database.py](#-test_databasepy) | 2 | SQLite DB init & context manager |
 | 4 | 📝 [test_transcript.py](#-test_transcriptpy) | 7 | YouTube URL parsing & video ID extraction |
-| 5 | 🤖 [test_graph.py](#-test_graphpy) | 3 | LangGraph state & system prompt |
-| 6 | 🌐 [test_main.py](#-test_mainpy) | 10 | FastAPI endpoints (integration) |
+| 5 | 🤖 [test_graph.py](#-test_graphpy) | 4 | LangGraph state & system prompt |
+| 6 | 🌐 [test_main.py](#-test_mainpy) | 7 | FastAPI endpoints (integration) |
 
 ---
 
