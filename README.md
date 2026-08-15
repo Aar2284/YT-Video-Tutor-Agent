@@ -1,6 +1,6 @@
 # 🎓 AI Tutor — YouTube Video Tutor Agent
 
-#### Live Link :- [https://frontend-xi-ruddy-70.vercel.app/login](https://frontend-xi-ruddy-70.vercel.app/login)
+#### Live Link :- [https://frontend-xi-ruddy-70.vercel.app](https://frontend-xi-ruddy-70.vercel.app/login)
 
 > Chat with any YouTube video. Ask questions, get answers **grounded in the transcript**, and speak naturally with **voice I/O** (Indic STT + English TTS).
 
