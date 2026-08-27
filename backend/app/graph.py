@@ -8,6 +8,7 @@ from .llm import get_llm
 class TutorState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
     context: str
+    system: str
 
 llm = get_llm()
 memory = MemorySaver()
@@ -18,7 +19,7 @@ Be helpful, clear, and educational. If the transcript doesn't contain info to an
 Keep answers concise but thorough."""
 
 def chatbot(state: TutorState):
-    msgs = [SystemMessage(content=SYSTEM)]
+    msgs = [SystemMessage(content=state.get("system") or SYSTEM)]
     if state.get("context"):
         msgs.append(SystemMessage(content=f"Video transcript:\n{state['context']}"))
     msgs.extend(state["messages"])
@@ -31,10 +32,14 @@ graph.add_edge(START, "chatbot")
 graph.add_edge("chatbot", END)
 tutor_graph = graph.compile(checkpointer=memory)
 
-def chat(message: str, thread_id: str, context: str = "") -> str:
+def chat(message: str, thread_id: str, context: str = "", system_prompt: str | None = None) -> str:
     config = {"configurable": {"thread_id": thread_id}}
     result = tutor_graph.invoke(
-        {"messages": [("user", message)], "context": context},
+        {
+            "messages": [("user", message)],
+            "context": context,
+            "system": system_prompt or "",
+        },
         config=config,
     )
     return result["messages"][-1].content
