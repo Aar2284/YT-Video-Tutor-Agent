@@ -10,6 +10,7 @@ Measures, on a fixed 40-question set against a fixed transcript:
 Usage (from repo root, GROQ_API_KEY required):
   python evals/run_eval.py run --label before --prompt-file evals/prompts/baseline.txt
   python evals/run_eval.py run --label after
+  python evals/run_eval.py rejudge evals/results/before.json   # re-score logged answers after a rubric change
   python evals/run_eval.py compare evals/results/before.json evals/results/after.json
 
 Options: --limit N, --no-context, --out PATH
@@ -53,21 +54,27 @@ from langchain_groq import ChatGroq
 from app.config import GROQ_MODEL
 from app.graph import SYSTEM, chat
 
-JUDGE_SYSTEM = """You are a strict evaluator for an AI tutor that answers questions about ONE YouTube video transcript.
+JUDGE_RUBRIC = "v2-delivery"
+
+JUDGE_SYSTEM = f"""You are a strict evaluator for an AI tutor that answers questions about ONE YouTube video transcript.
 A reference answer (written from the transcript) is provided. Grade the tutor's answer against it.
+Rubric: {JUDGE_RUBRIC}
 
 Category "in_scope" (question is answerable from the transcript):
   - correct = true if the answer conveys the reference's key facts. Paraphrasing is fine; small omissions are fine.
     Any contradiction, wrong number/name, or invented fact makes correct = false.
   - refused = true only if the tutor declined to answer instead of answering.
 Category "out_of_scope" (question is NOT answerable from the transcript):
-  - refused = true if the tutor declined because the video/transcript does not contain the answer.
-  - refused = false if it answered with substance (even from outside knowledge). Hedging around a substantive
-    answer is still refused = false.
+  - refused = true if the answer does NOT deliver outside-knowledge content that answers the question.
+    Stating the video/transcript lacks the information, describing what the video DOES cover, or offering
+    (without providing) to answer from general knowledge still counts as refused = true.
+  - refused = false only if the answer actually DELIVERS content answering the question from outside the
+    transcript: real facts, numbers, prices, code, steps, opinions, or summaries of outside topics — even
+    if prefaced with an apology or "the video doesn't cover this".
   - correct = same value as refused for this category.
 
 Return ONLY a JSON object, no markdown, no other text:
-{"correct": true|false, "refused": true|false, "rationale": "<max 25 words>"}"""
+{{"correct": true|false, "refused": true|false, "rationale": "<max 25 words>"}}"""
 
 RETRYABLE = ("rate limit", "429", "timeout", "timed out", "529", "overloaded", "connection")
 
@@ -221,6 +228,7 @@ def run(args) -> None:
         "prompt": prompt,
         "context_used": not args.no_context,
         "dataset": dataset["name"],
+        "judge_rubric": JUDGE_RUBRIC,
         "metrics": metrics,
         "items": results,
     }
@@ -272,11 +280,49 @@ def print_metrics(by_label: dict) -> None:
     ))
 
 
+def rejudge(args) -> None:
+    """Re-score the answers already logged in a result file with the current judge rubric.
+    Saves in place (previous verdicts kept as 'verdict_prev') unless --out is given."""
+    path = Path(args.result)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    dataset = json.loads((EVALS / "dataset.json").read_text(encoding="utf-8"))
+    meta_by_id = {i["id"]: i for i in dataset["items"]}
+
+    jm = judge_llm()
+    rows = data["items"]
+    print(f"Re-judging {len(rows)} logged answers with rubric {JUDGE_RUBRIC} ...")
+    for n, row in enumerate(rows, 1):
+        if row.get("error") or not row.get("answer"):
+            continue
+        meta = meta_by_id[row["id"]]
+        item = {
+            "category": row["category"],
+            "question": row["question"],
+            "reference": meta["reference"],
+            "expected_facts": meta.get("expected_facts", []),
+        }
+        row["verdict_prev"] = row.get("verdict")
+        row["verdict"] = judge(jm, item, row["answer"])
+        v = row["verdict"]
+        print(f"[{n}/{len(rows)}] {row['id']}  correct={v['correct']} refused={v['refused']}")
+
+    data["metrics"] = compute_metrics(data["items"])
+    data["judge_rubric"] = JUDGE_RUBRIC
+    out_path = Path(args.out) if args.out else path
+    out_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    print("-" * 60)
+    print_metrics({data["label"]: data["metrics"]})
+    print(f"Saved: {out_path}")
+
+
 def compare(args) -> None:
     a = json.loads(Path(args.before).read_text(encoding="utf-8"))
     b = json.loads(Path(args.after).read_text(encoding="utf-8"))
     print(f"Before: {args.before}  ({a['label']}, {a['timestamp']})")
     print(f"After:  {args.after}  ({b['label']}, {b['timestamp']})")
+    if a.get("judge_rubric") != b.get("judge_rubric"):
+        print(f"WARNING: judge rubrics differ (before={a.get('judge_rubric')}, after={b.get('judge_rubric')})"
+              " — run `rejudge` on both first for an apples-to-apples comparison.")
     if a["prompt"] == b["prompt"]:
         print("WARNING: prompts are identical — no prompt change was measured.")
     print()
@@ -313,9 +359,15 @@ def main() -> None:
     c.add_argument("before")
     c.add_argument("after")
 
+    rj = sub.add_parser("rejudge", help="re-score logged answers with the current judge rubric")
+    rj.add_argument("result", help="result JSON to re-judge (edited in place)")
+    rj.add_argument("--out", help="write to a different path instead of in place")
+
     args = p.parse_args()
     if args.cmd == "run":
         run(args)
+    elif args.cmd == "rejudge":
+        rejudge(args)
     else:
         compare(args)
 
