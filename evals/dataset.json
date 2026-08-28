@@ -1,0 +1,328 @@
+{
+  "name": "yt-video-tutor-eval-v1",
+  "version": 1,
+  "transcript": "transcript.txt",
+  "description": "40 questions against a fixed transcript of a YouTube video about how solar panels work. 24 in-scope (answerable only from the transcript) and 16 out-of-scope (must be refused).",
+  "items": [
+    {
+      "id": "in-01",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Who discovered the photovoltaic effect, and in what year?",
+      "reference": "Edmond Becquerel, a French physicist, discovered it in 1839.",
+      "expected_facts": ["becquerel", "1839"]
+    },
+    {
+      "id": "in-02",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How old was the person who discovered the photovoltaic effect?",
+      "reference": "He was 19 years old.",
+      "expected_facts": ["19"]
+    },
+    {
+      "id": "in-03",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is the photovoltaic effect?",
+      "reference": "When light strikes a material it knocks electrons loose, causing an electric current to flow. Photovoltaic means 'light electricity'.",
+      "expected_facts": ["light", "knocks electrons", "current"]
+    },
+    {
+      "id": "in-04",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What are the two layers of a solar cell treated with, and what charge does each layer have?",
+      "reference": "The top n-type layer is treated with phosphorus (extra electrons, negative). The bottom p-type layer is treated with boron (short of electrons / holes, positive).",
+      "expected_facts": ["phosphorus", "boron", "n-type", "p-type"]
+    },
+    {
+      "id": "in-05",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What does the p-n junction create and why does it matter?",
+      "reference": "It creates an electric field that acts like a one-way street, pushing free electrons in one direction.",
+      "expected_facts": ["electric field", "electron"]
+    },
+    {
+      "id": "in-06",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What type of current do solar cells produce, and what device converts it for use in a home?",
+      "reference": "Cells produce direct current (DC); an inverter converts it to alternating current (AC) for the home.",
+      "expected_facts": ["dc", "ac", "inverter"]
+    },
+    {
+      "id": "in-07",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What efficiency range do commercial solar panels have today?",
+      "reference": "About 15 to 22 percent of sunlight converted into usable electricity.",
+      "expected_facts": ["15", "22", "percent"]
+    },
+    {
+      "id": "in-08",
+      "category": "in_scope",
+      "tag": "list",
+      "question": "What are the three main types of solar panels discussed in the video?",
+      "reference": "Monocrystalline, polycrystalline, and thin-film.",
+      "expected_facts": ["monocrystalline", "polycrystalline", "thin-film"]
+    },
+    {
+      "id": "in-09",
+      "category": "in_scope",
+      "tag": "comparison",
+      "question": "How do monocrystalline and polycrystalline panels differ?",
+      "reference": "Monocrystalline is cut from a single silicon crystal, more efficient (around 20-22%) and most expensive. Polycrystalline is made from multiple melted crystals, less efficient (around 15-17%) but cheaper to manufacture.",
+      "expected_facts": ["single", "multiple", "efficient", "expensive"]
+    },
+    {
+      "id": "in-10",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What is the main downside of thin-film panels?",
+      "reference": "Lower efficiency, around 10-13 percent, so you need more roof space for the same output (though they are flexible and lightweight).",
+      "expected_facts": ["10", "13", "efficiency"]
+    },
+    {
+      "id": "in-11",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How long do solar panels typically last?",
+      "reference": "25 to 30 years.",
+      "expected_facts": ["25", "30"]
+    },
+    {
+      "id": "in-12",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What output level do manufacturers typically guarantee after 25 years?",
+      "reference": "At least 80 percent of the panel's original output.",
+      "expected_facts": ["80"]
+    },
+    {
+      "id": "in-13",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Do solar panels have moving parts, and how often should they be cleaned?",
+      "reference": "No moving parts, so almost nothing to break; clean the glass one to four times a year depending on dust.",
+      "expected_facts": ["no moving parts", "one to four"]
+    },
+    {
+      "id": "in-14",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is energy payback time, and how long is it for a solar panel?",
+      "reference": "The time it takes a panel to produce all the energy used to manufacture it — typically one to four years.",
+      "expected_facts": ["one to four", "manufactur"]
+    },
+    {
+      "id": "in-15",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is net metering?",
+      "reference": "A policy where electricity you don't use is sent back to the grid and you get credited for it.",
+      "expected_facts": ["grid", "credit"]
+    },
+    {
+      "id": "in-16",
+      "category": "in_scope",
+      "tag": "comparison",
+      "question": "What is the difference between a grid-tied and an off-grid solar system?",
+      "reference": "Grid-tied stays connected to the utility grid and exports excess for net metering credits; off-grid is independent and requires batteries (usually lithium-ion) to store energy for night/outages.",
+      "expected_facts": ["grid", "batter"]
+    },
+    {
+      "id": "in-17",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "Why would a solar installation include a battery?",
+      "reference": "To store excess energy generated during the day for use at night or during a power outage; some grid-tied homeowners add one as backup.",
+      "expected_facts": ["store", "night"]
+    },
+    {
+      "id": "in-18",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Do solar panels generate electricity at night?",
+      "reference": "No — panels only produce electricity while sunlight hits them, so they generate nothing at night; that's why storage or a grid connection matters.",
+      "expected_facts": ["no", "night", "sunlight"]
+    },
+    {
+      "id": "in-19",
+      "category": "in_scope",
+      "tag": "summary",
+      "question": "Walk me through the full chain: how does sunlight become usable electricity in my house?",
+      "reference": "Photons hit the silicon cell and knock electrons free; the electric field at the p-n junction pushes them into a flow of DC current; the inverter converts DC to AC for the house.",
+      "expected_facts": ["photon", "electron", "dc", "inverter", "ac"]
+    },
+    {
+      "id": "in-20",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What happens when photons from sunlight hit the silicon cell?",
+      "reference": "They knock electrons free from their atoms; the electric field then pushes those free electrons in one direction, producing current.",
+      "expected_facts": ["knock", "electron", "free"]
+    },
+    {
+      "id": "in-21",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "By how much have solar panel prices fallen over the last decade?",
+      "reference": "More than 90 percent.",
+      "expected_facts": ["90"]
+    },
+    {
+      "id": "in-22",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What happens to the sunlight energy that panels don't convert?",
+      "reference": "It is lost, mostly as heat and reflection.",
+      "expected_facts": ["heat", "reflection"]
+    },
+    {
+      "id": "in-23",
+      "category": "in_scope",
+      "tag": "summary",
+      "question": "Summarize in a few sentences how a solar panel makes electricity.",
+      "reference": "A short summary covering: silicon cell / two doped layers, photons knock electrons loose, the p-n junction's electric field directs them into DC current, and an inverter converts DC to AC for the home.",
+      "expected_facts": ["silicon", "electron", "dc", "inverter"]
+    },
+    {
+      "id": "in-24",
+      "category": "in_scope",
+      "tag": "application",
+      "question": "Which panel type should I choose if my roof space is limited, and why?",
+      "reference": "Monocrystalline, because it gives the most power per square meter (highest efficiency, around 20-22%).",
+      "expected_facts": ["monocrystalline", "square meter"]
+    },
+    {
+      "id": "out-01",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How do wind turbines generate electricity?",
+      "reference": "Not in the video. The tutor must refuse: the transcript does not cover wind turbines.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-02",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How much does it cost to install solar panels in California?",
+      "reference": "Not in the video (no dollar figures or regional costs). The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-03",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Who won the Nobel Prize in Physics last year?",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-04",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Write me a Python function that sorts a list of dictionaries by key.",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-05",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Explain the process of photosynthesis.",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-06",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "What is the capital of France?",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-07",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Translate 'good morning' into Spanish.",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-08",
+      "category": "out_of_scope",
+      "tag": "subjective",
+      "question": "Is solar energy better than nuclear energy? Give me your opinion.",
+      "reference": "The video never discusses nuclear energy or compares them. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-09",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What did the speaker say about hydrogen fuel cells?",
+      "reference": "Hydrogen fuel cells are never mentioned. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-10",
+      "category": "out_of_scope",
+      "tag": "personal_advice",
+      "question": "My electricity bill is $400 a month. Is it worth it for me to buy solar panels?",
+      "reference": "Personalized financial advice requiring numbers not in the video. The tutor must refuse (or clearly say the video doesn't cover this) instead of giving a verdict.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-11",
+      "category": "out_of_scope",
+      "tag": "current_events",
+      "question": "Who is the current CEO of Tesla?",
+      "reference": "Not in the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-12",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Summarize the book Atomic Habits.",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-13",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "What's the weather going to be in Tokyo this weekend?",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-14",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "How do I claim federal tax credits for installing solar?",
+      "reference": "Tax incentives are never discussed in the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-15",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "In what year will solar power cover 100 percent of global energy demand?",
+      "reference": "No such prediction exists in the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "out-16",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Can you explain quantum entanglement?",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    }
+  ]
+}
