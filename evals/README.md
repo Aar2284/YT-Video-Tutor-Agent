@@ -23,7 +23,7 @@ Measures the two claims the README makes about grounding: **answers correctly fr
 | Hallucination rate | 1 − refusal accuracy: out-of-scope questions answered with outside knowledge |
 | Grounded score | (correct answers + correct refusals) / 40 — single headline number |
 
-Scoring is LLM-as-judge (`llama-3.3-70b-versatile`, temperature 0) against the authored reference answer with a strict rubric; every verdict is logged with a rationale in `results/*.json` for spot-checking.
+Scoring is LLM-as-judge (`openai/gpt-oss-120b`, temperature 0) against the authored reference answer with a strict rubric; every verdict is logged with a rationale in `results/*.json` for spot-checking.
 
 ## Run it
 

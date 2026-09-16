@@ -61,7 +61,7 @@ Built as a full-stack AI application using **FastAPI** (backend), **Next.js 16**
 |-------|-----------|---------|
 | 🌐 API | **FastAPI** + Uvicorn | REST API framework |
 | 🤖 AI | **LangChain** + **LangGraph** | Stateful conversation pipeline |
-| 🧠 LLM | **Groq** (llama-3.3-70b-versatile) | Fast LLM inference |
+| 🧠 LLM | **Groq** (openai/gpt-oss-120b) | Fast LLM inference |
 | 📝 Transcript | **youtube-transcript-api** | Free caption extraction |
 | 🎤 Fallback STT | **Groq Whisper** (whisper-large-v3) | Audio transcription |
 | 🗣️ Voice | **Sarvam AI** + **Deepgram** | Indic STT (Saaras v3) + English TTS (Aura) |
@@ -464,7 +464,7 @@ User adds YouTube URL
 │  + User question                │
 │       │                         │
 │       ▼                         │
-│  Groq LLM (llama-3.3-70b)      │
+│  Groq LLM (gpt-oss-120b)        │
 │       │                         │
 │       ▼                         │
 │  Grounded answer                │

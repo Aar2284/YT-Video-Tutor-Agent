@@ -103,7 +103,7 @@ All config lives in **`config.py`** and reads from `../../.env` (project root).
 | `DEEPGRAM_API_KEY` | — | 🔑 Deepgram key for TTS |
 | `SUPADATA_KEY` | — | 🔑 Supadata key for transcript proxy |
 | `JWT_SECRET` | `dev-secret-change-in-production` | 🔐 JWT signing secret |
-| `GROQ_MODEL` | `llama-3.3-70b-versatile` | 🧠 Groq model name |
+| `GROQ_MODEL` | `openai/gpt-oss-120b` | 🧠 Groq model name |
 | `JWT_ALGORITHM` | `HS256` | 🔒 JWT algorithm |
 | `JWT_EXPIRY_HOURS` | `72` | ⏰ Token validity (3 days) |
 
@@ -176,7 +176,7 @@ videos (id, user_id, video_id, title, thumbnail, created_at)
 Single function that returns a `ChatGroq` instance.
 
 ```python
-get_llm() → ChatGroq(model="llama-3.3-70b-versatile", temperature=0.3)
+get_llm() → ChatGroq(model="openai/gpt-oss-120b", temperature=0.3)
 ```
 
 ---
