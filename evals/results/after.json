@@ -1,0 +1,705 @@
+{
+  "label": "after",
+  "timestamp": "2026-11-05T17:05:07.945844+00:00",
+  "model": "openai/gpt-oss-120b",
+  "answer_temperature": 0.3,
+  "judge_temperature": 0,
+  "prompt_source": "evals\\prompts\\grounded_v2.txt",
+  "prompt": "You are an AI tutor for exactly one YouTube video. The only source of truth is the transcript provided with this conversation. Answer strictly from the transcript; do not use outside knowledge.\n\nRules:\n1. If the transcript contains the answer, reply with a concise, educational answer grounded in it. Quote the supporting phrase from the transcript when it helps clarity.\n2. If the transcript does not contain the information, reply: \"The video doesn't cover that.\" Optionally add one sentence about what the video does cover. Never guess or fill gaps with outside knowledge.\n3. Refuse the same way for opinions, comparisons, personal or financial advice, predictions, and questions about other topics — you only know this video.\n4. If no transcript is available, reply: \"I don't have the video transcript, so I can't answer that.\"\n5. Stay concise and clear. Never invent names, numbers, dates, or quotes.",
+  "context_used": true,
+  "dataset": "yt-video-tutor-eval-v1",
+  "metrics": {
+    "in_scope_n": 24,
+    "in_scope_accuracy": 1.0,
+    "over_refusal_rate": 0.0,
+    "out_of_scope_n": 16,
+    "refusal_accuracy": 1.0,
+    "hallucination_rate": 0.0,
+    "grounded_score": 1.0,
+    "run_errors": 0,
+    "judge_errors": 0
+  },
+  "items": [
+    {
+      "id": "in-01",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Who discovered the photovoltaic effect, and in what year?",
+      "answer": "Edmond Becquerel discovered the photovoltaic effect in 1839.【Hey everyone… The photovoltaic effect was discovered way back in 1839 by a French physicist named Edmond Becquerel.】",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference facts exactly; no errors or omissions."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference facts exactly."
+      }
+    },
+    {
+      "id": "in-02",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How old was the person who discovered the photovoltaic effect?",
+      "answer": "He was **19 years old** when he discovered the photovoltaic effect. (The transcript notes that Edmond Becquerel made the discovery in 1839 “at the age of 19.”)",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides the correct age (19) matching reference; no refusal."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Tutor correctly states age as 19, matching reference."
+      }
+    },
+    {
+      "id": "in-03",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is the photovoltaic effect?",
+      "answer": "The photovoltaic effect is the phenomenon where light striking a material knocks electrons loose, creating an electric current. As the video explains, “photovoltaic … describes what happens when light strikes a material and knocks electrons loose, causing an electric current to flow.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately restates light knocks electrons loose, causing current, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches key facts: light, electrons knocked loose, current generated."
+      }
+    },
+    {
+      "id": "in-04",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What are the two layers of a solar cell treated with, and what charge does each layer have?",
+      "answer": "The top layer of a solar cell is **treated with phosphorus**, which adds extra electrons and gives it a **negative (n‑type) charge**.  \nThe bottom layer is **treated with boron**, which creates a shortage of electrons (positive “holes”) and gives it a **positive (p‑type) charge**【transcript】.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: phosphorus for n-type negative layer, boron for p-type positive layer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states phosphorus for top layer (negative) and boron for bottom layer (positive) matching reference."
+      }
+    },
+    {
+      "id": "in-05",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What does the p-n junction create and why does it matter?",
+      "answer": "The p‑n junction creates an **electric field**. As the video explains, “where these two layers meet, called the p‑n junction, an electric field forms. That electric field is the key to the whole process, because it acts like a one‑way street for electrons.” This field pushes the freed electrons in one direction, allowing a usable electric current to be generated.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: electric field created, pushes electrons one way."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: electric field created, pushes electrons one way."
+      }
+    },
+    {
+      "id": "in-06",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What type of current do solar cells produce, and what device converts it for use in a home?",
+      "answer": "Solar cells generate **direct current (DC)**. To make that power usable for household appliances, a **solar inverter** converts the DC into **alternating current (AC)**. As the video explains: “the current produced by the cells is direct current, or DC… every solar installation includes an inverter, a box that converts the DC from the panels into AC that your house can use.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states DC production and inverter conversion to AC."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states solar cells produce DC and an inverter converts it to AC for home use."
+      }
+    },
+    {
+      "id": "in-07",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What efficiency range do commercial solar panels have today?",
+      "answer": "Commercial solar panels today typically achieve an efficiency of **about 15 % to 22 %** of the sunlight they receive. (The video states: “Commercial solar panels today convert about 15 to 22 percent of the sunlight that hits them into usable electricity.”)",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference efficiency range exactly, no contradictions."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference efficiency range 15‑22% with no contradictions."
+      }
+    },
+    {
+      "id": "in-08",
+      "category": "in_scope",
+      "tag": "list",
+      "question": "What are the three main types of solar panels discussed in the video?",
+      "answer": "The video lists three main types of solar panels:\n\n1. **Monocrystalline panels** – cut from a single silicon crystal, highest efficiency (≈20‑22%).  \n2. **Polycrystalline panels** – made from multiple melted silicon crystals, slightly lower efficiency (≈15‑17%).  \n3. **Thin‑film panels** – very thin layers of material deposited on a substrate, lower efficiency (≈10‑13%).  \n\n*“There are three main types of panels you’ll see on the market. Monocrystalline… Polycrystalline… Thin‑film panels…”*",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Tutor correctly lists monocrystalline, polycrystalline, and thin-film panels, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Tutor correctly lists monocrystalline, polycrystalline, and thin-film panels, matching reference."
+      }
+    },
+    {
+      "id": "in-09",
+      "category": "in_scope",
+      "tag": "comparison",
+      "question": "How do monocrystalline and polycrystalline panels differ?",
+      "answer": "Monocrystalline panels are made from a **single crystal of silicon**, which makes them the purest type and gives them the highest efficiency—about **20 %–22 %**, but they also tend to be the most expensive.  \n\nPolycrystalline panels are produced by **melting multiple silicon crystals together**; they are a bit less efficient—around **15 %–17 %**—but they are cheaper to manufacture.  \n\n*“Monocrystalline panels are cut from a single crystal of silicon… around 20 to 22 percent… and also the most expensive. Polycrystalline panels are made by melting multiple crystals together… around 15 to 17 percent, but they cost less to manufacture.”*",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides all key facts accurately, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches all key facts: single vs multiple crystals, efficiency ranges, cost differences."
+      }
+    },
+    {
+      "id": "in-10",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What is the main downside of thin-film panels?",
+      "answer": "The main downside of thin‑film panels is their lower efficiency—about 10‑13 %—which means you need more roof space to generate the same amount of power as other panel types. (Transcript: “Thin‑film panels … their efficiency is lower, somewhere around 10 to 13 percent, so you need more roof space for the same output.”)",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: cites lower efficiency (10‑13%) and need for more roof space as main downside."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference, cites 10‑13% efficiency and need for more roof space as main downside."
+      }
+    },
+    {
+      "id": "in-11",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How long do solar panels typically last?",
+      "answer": "Solar panels are built to be very durable—most panels last **about 25 to 30 years**, with manufacturers usually guaranteeing they’ll still produce at least 80 % of their original output after 25 years.【Transcript: “Most panels last 25 to 30 years, and manufacturers typically guarantee that a panel will still produce at least 80 percent of its original output after 25 years.”】",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference lifespan 25‑30 years; no contradictions or invented facts."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference duration 25‑30 years; no contradictions."
+      }
+    },
+    {
+      "id": "in-12",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What output level do manufacturers typically guarantee after 25 years?",
+      "answer": "Manufacturers typically guarantee that a solar panel will still produce **at least 80 percent of its original output after 25 years**【...manufacturers typically guarantee that a panel will still produce at least 80 percent of its original output after 25 years...】.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact of at least 80% output guarantee."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact of 80% guarantee after 25 years."
+      }
+    },
+    {
+      "id": "in-13",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Do solar panels have moving parts, and how often should they be cleaned?",
+      "answer": "Solar panels have **no moving parts**, so there’s virtually nothing that can wear out mechanically. The only regular upkeep is cleaning the glass, which the video recommends doing **about one to four times a year**, depending on how dusty your area is.【...panels have no moving parts, there's almost nothing to break. Maintenance is basically just cleaning the glass, which you should do one to four times a year depending on how dusty your area is.】",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference facts; no contradictions."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: no moving parts, cleaning 1‑4 times yearly based on dust."
+      }
+    },
+    {
+      "id": "in-14",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is energy payback time, and how long is it for a solar panel?",
+      "answer": "Energy payback time is the period a solar panel needs to generate the same amount of energy that was consumed to manufacture it. According to the video, “a panel typically produces in **one to four years** all the energy that went into manufacturing it. … That’s what we mean by **energy payback time**.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately defines energy payback time and gives the correct one‑to‑four‑year range."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides correct definition and one‑to‑four‑year timeframe."
+      }
+    },
+    {
+      "id": "in-15",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is net metering?",
+      "answer": "Net metering is a policy that lets you earn credit for any electricity your solar panels generate that you don’t use yourself and send back to the utility grid. As the video explains, “During the day, any electricity you don't use yourself is sent back to the grid, and under a policy called net metering you get credited for it.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately restates grid and credit policy."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately describes net metering with grid and credit, matching reference."
+      }
+    },
+    {
+      "id": "in-16",
+      "category": "in_scope",
+      "tag": "comparison",
+      "question": "What is the difference between a grid-tied and an off-grid solar system?",
+      "answer": "A **grid‑tied** system stays connected to the utility grid. During the day any electricity you don’t use is sent back to the grid and you receive credit through net‑metering; at night you simply draw power from the grid as usual.  \n\nAn **off‑grid** system is completely independent of the utility. Because the panels only generate when the sun shines, you need batteries (usually lithium‑ion) to store excess daytime energy so you can use it at night or during outages.  \n\n*“If you're grid‑tied, your panels stay connected to the utility grid… At night you simply draw from the grid like normal. If you go off‑grid, you're completely independent, which means you need batteries… to store the excess energy from the day so you can use it at night or during an outage.”*",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately describes grid‑tied vs off‑grid, mentions net‑metering credits and lithium‑ion batteries, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer matches reference, includes grid connection, net metering, batteries (lithium-ion) for off‑grid night use."
+      }
+    },
+    {
+      "id": "in-17",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "Why would a solar installation include a battery?",
+      "answer": "A battery lets you store the electricity the panels generate during the day so you can use it when the sun isn’t shining or when the grid is unavailable. The video explains that “if you go off‑grid… you need batteries … to store the excess energy from the day so you can use it at night or during an outage,” and that even grid‑tied homeowners may add a battery “as backup.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately restates storing excess energy for night/outage and backup use, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: stores excess energy for night/outage, backup for grid‑tied."
+      }
+    },
+    {
+      "id": "in-18",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Do solar panels generate electricity at night?",
+      "answer": "No. Solar panels only produce electricity while sunlight is hitting them, so they generate nothing at night. (“One thing to remember: panels only produce electricity while sunlight is hitting them, so they generate nothing at night.”)",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately repeats reference facts: no electricity at night, only when sunlight hits panels."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer matches reference, stating panels need sunlight and generate nothing at night."
+      }
+    },
+    {
+      "id": "in-19",
+      "category": "in_scope",
+      "tag": "summary",
+      "question": "Walk me through the full chain: how does sunlight become usable electricity in my house?",
+      "answer": "Sure! Here’s the step‑by‑step chain the video describes:\n\n1. **Photon absorption** – Sunlight’s photons “slam into the silicon cell and knock electrons free from their atoms.”【...Photons from sunlight slam into the silicon cell and knock electrons free from their atoms...】\n\n2. **p‑n junction electric field** – The cell’s two layers (n‑type + phosphorus on top, p‑type + boron below) form a **p‑n junction** where an electric field acts like a one‑way street, pushing the freed electrons in one direction.【...Where these two layers meet, called the p‑n junction, an electric field forms. That electric field is the key to the whole process, because it acts like a one‑way street for electrons.】\n\n3. **DC current generation** – The flow of those electrons out of the cell is a **direct‑current (DC) electrical current**.【...that flow of electrons is electrical current. But here's an important detail: the current produced by the cells is direct current, or DC.】\n\n4. **Inversion to AC** – Because homes use **alternating current (AC)**, every solar installation includes an **inverter** that converts the panel’s DC into usable AC.【...every solar installation includes an inverter, a box that converts the DC from the panels into AC that your house can use.】\n\n5. **Delivery to the house** – The AC electricity from the inverter feeds your lights, appliances, etc. If you’re **grid‑tied**, excess AC is sent back to the utility (net‑metering) and you draw from the grid at night; if you’re **off‑grid**, a battery stores the DC/AC for later use.【...If you're grid‑tied, your panels stay connected to the utility grid... If you go off‑grid, you need batteries … to store the excess energy from the day so you can use it at night or during an outage.】\n\nSo, from photon → electron release → p‑n junction field → DC → inverter → AC → home (or grid/battery). That’s the full chain the video walks through.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately conveys photon, electron, p-n junction, DC generation, inverter conversion to AC, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately describes photons freeing electrons, p‑n junction field creating DC, inverter converting to AC, matching reference key facts."
+      }
+    },
+    {
+      "id": "in-20",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What happens when photons from sunlight hit the silicon cell?",
+      "answer": "When photons from sunlight strike the silicon cell they “slam into” the material and knock electrons free from their atoms. The freed electrons are then pushed by the electric field at the p‑n junction, creating a flow of electrons—that is, an electrical current.【Transcript: “Photons from sunlight slam into the silicon cell and knock electrons free from their atoms. The electric field at the p‑n junction pushes those free electrons in one direction, and that flow of electrons is electrical current.”】",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately conveys knock electrons free, electric field pushes, creates current; no contradictions."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately restates photons knock electrons free and electric field pushes them to create current."
+      }
+    },
+    {
+      "id": "in-21",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "By how much have solar panel prices fallen over the last decade?",
+      "answer": "The video states that “the price of solar panels has fallen by **more than 90 percent** over the last decade.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact exactly; provides the required percentage."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact exactly."
+      }
+    },
+    {
+      "id": "in-22",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What happens to the sunlight energy that panels don't convert?",
+      "answer": "The portion of sunlight that isn’t turned into electricity is essentially lost as heat and reflected light. The video says the panels “convert about 15 to 22 percent of the sunlight… The rest of the energy is lost, mostly as heat and reflection.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: lost as heat and reflection, no contradictions."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: states lost energy mainly as heat and reflection."
+      }
+    },
+    {
+      "id": "in-23",
+      "category": "in_scope",
+      "tag": "summary",
+      "question": "Summarize in a few sentences how a solar panel makes electricity.",
+      "answer": "A solar panel generates electricity by using sunlight to free electrons in a silicon cell. Photons strike the silicon, knocking electrons loose; the electric field at the p‑n junction then pushes those free electrons in one direction, creating a flow of direct current (DC). An inverter converts this DC into the alternating current (AC) used in homes. (Transcript: “Photons from sunlight slam into the silicon cell and knock electrons free… The electric field at the p‑n junction pushes those free electrons… that flow of electrons is electrical current… every solar installation includes an inverter… converts the DC… into AC…”)",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer includes silicon, photons freeing electrons, p‑n junction directing to DC, and inverter converting to AC; matches reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately includes silicon, photons, p-n junction, DC, and inverter conversion."
+      }
+    },
+    {
+      "id": "in-24",
+      "category": "in_scope",
+      "tag": "application",
+      "question": "Which panel type should I choose if my roof space is limited, and why?",
+      "answer": "Choose a **monocrystalline** panel. The video explains that “if your roof space is limited, monocrystalline gives you the most power per square meter, so that's usually the right call,” because monocrystalline panels have the highest efficiency (about 20‑22 %).",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states monocrystalline is best for limited roof space due to highest power per m² and efficiency."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: recommends monocrystalline for limited roof space, cites highest power per square meter and 20‑22% efficiency."
+      }
+    },
+    {
+      "id": "out-01",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How do wind turbines generate electricity?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, explaining the photovoltaic effect, panel types, efficiency, lifespan, and system integration.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor refuses to answer wind turbine question, only notes video lacks it and adds unrelated info."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover wind turbines."
+      }
+    },
+    {
+      "id": "out-02",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How much does it cost to install solar panels in California?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels work, their efficiency, types, lifespan, maintenance, and how they connect to the grid.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video lacks cost info, matching reference requirement."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting the video lacks cost information, matching reference requirement."
+      }
+    },
+    {
+      "id": "out-03",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Who won the Nobel Prize in Physics last year?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, their types, efficiency, lifespan, and system connections.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the Nobel Prize question and gave no external answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the Nobel Prize question, matching out-of-scope requirement."
+      }
+    },
+    {
+      "id": "out-04",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Write me a Python function that sorts a list of dictionaries by key.",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, their efficiency, types, lifespan, and system connections.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Refused and gave no answer, matching out-of-scope requirement."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the requested Python function."
+      }
+    },
+    {
+      "id": "out-05",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Explain the process of photosynthesis.",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover photosynthesis, matching the required out-of-scope response."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover photosynthesis, matching the out-of-scope requirement."
+      }
+    },
+    {
+      "id": "out-06",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "What is the capital of France?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, panel types, efficiency, lifespan, and system connections.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating video doesn't cover the capital of France."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the capital of France."
+      }
+    },
+    {
+      "id": "out-07",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Translate 'good morning' into Spanish.",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the translation and providing no answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating video doesn't cover translation."
+      }
+    },
+    {
+      "id": "out-08",
+      "category": "out_of_scope",
+      "tag": "subjective",
+      "question": "Is solar energy better than nuclear energy? Give me your opinion.",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, their types, efficiency, lifespan, and system connections.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused to answer, citing lack of coverage in the video."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting video doesn't cover the topic."
+      }
+    },
+    {
+      "id": "out-09",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What did the speaker say about hydrogen fuel cells?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, their components, efficiency, types, lifespan, and system connections.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover hydrogen fuel cells."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover hydrogen fuel cells."
+      }
+    },
+    {
+      "id": "out-10",
+      "category": "out_of_scope",
+      "tag": "personal_advice",
+      "question": "My electricity bill is $400 a month. Is it worth it for me to buy solar panels?",
+      "answer": "The video doesn't cover that. It explains how solar panels generate electricity, their efficiency, types, lifespan, and how they connect to the grid, but it doesn’t provide personal financial advice.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating video lacks personal financial advice."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating video lacks personal financial advice."
+      }
+    },
+    {
+      "id": "out-11",
+      "category": "out_of_scope",
+      "tag": "current_events",
+      "question": "Who is the current CEO of Tesla?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, their types, efficiency, lifespan, and system connections.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating video lacks the info and gave no external answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating video doesn't cover the CEO question."
+      }
+    },
+    {
+      "id": "out-12",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Summarize the book Atomic Habits.",
+      "answer": "The video doesn't cover that. It explains how solar panels convert sunlight into electricity, the types of panels, efficiency, lifespan, and how they connect to the grid.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Refuses to answer and provides no summary, matching out-of-scope requirement."
+      },
+      "verdict_prev": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Tutor gave unrelated content instead of a proper refusal."
+      }
+    },
+    {
+      "id": "out-13",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "What's the weather going to be in Tokyo this weekend?",
+      "answer": "The video doesn't cover that. It explains how solar panels convert sunlight into electricity, their efficiency, types, lifespan, and system setups.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor declined to answer weather question and gave unrelated content, not providing the requested information."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor declined, stating video doesn't cover weather, matching required refusal despite extra unrelated info."
+      }
+    },
+    {
+      "id": "out-14",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "How do I claim federal tax credits for installing solar?",
+      "answer": "The video doesn't cover that. It explains how solar panels work, their efficiency, types, lifespan, maintenance, and how they connect to the grid or batteries.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video lacks the information and gave no external answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover tax credits."
+      }
+    },
+    {
+      "id": "out-15",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "In what year will solar power cover 100 percent of global energy demand?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels work, their efficiency, types, lifespan, and how they connect to the grid or batteries.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the prediction, matching reference requirement."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the prediction."
+      }
+    },
+    {
+      "id": "out-16",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Can you explain quantum entanglement?",
+      "answer": "The video doesn't cover that. It focuses on how solar panels convert sunlight into electricity, their components, efficiency, types, lifespan, and system connections.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover quantum entanglement, matching out-of-scope requirement."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video does not cover quantum entanglement."
+      }
+    }
+  ],
+  "judge_rubric": "v2-delivery"
+}

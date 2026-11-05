@@ -1,0 +1,705 @@
+{
+  "label": "before",
+  "timestamp": "2026-11-05T11:17:09.757283+00:00",
+  "model": "openai/gpt-oss-120b",
+  "answer_temperature": 0.3,
+  "judge_temperature": 0,
+  "prompt_source": "evals\\prompts\\baseline.txt",
+  "prompt": "You are an AI tutor. A student is asking you questions about a YouTube video.\nUse the transcript provided as context to answer their questions.\nBe helpful, clear, and educational. If the transcript doesn't contain info to answer, say so.\nKeep answers concise but thorough.",
+  "context_used": true,
+  "dataset": "yt-video-tutor-eval-v1",
+  "metrics": {
+    "in_scope_n": 24,
+    "in_scope_accuracy": 1.0,
+    "over_refusal_rate": 0.0,
+    "out_of_scope_n": 16,
+    "refusal_accuracy": 0.8125,
+    "hallucination_rate": 0.1875,
+    "grounded_score": 0.925,
+    "run_errors": 0,
+    "judge_errors": 0
+  },
+  "items": [
+    {
+      "id": "in-01",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Who discovered the photovoltaic effect, and in what year?",
+      "answer": "The photovoltaic effect was discovered in **1839** by the French physicist **Edmond Becquerel**.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference facts exactly."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference facts exactly."
+      }
+    },
+    {
+      "id": "in-02",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How old was the person who discovered the photovoltaic effect?",
+      "answer": "Edmond Becquerel was **19 years old** when he discovered the photovoltaic effect in 1839.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides correct age matching reference; no refusal."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference age; adds correct name and year without contradicting."
+      }
+    },
+    {
+      "id": "in-03",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is the photovoltaic effect?",
+      "answer": "The photovoltaic effect is the physical process by which light (photons) hitting a material—typically a semiconductor like silicon—knocks electrons loose from their atoms. Those freed electrons can then move under the influence of an internal electric field, creating a flow of electric current. In other words, light is directly converted into electricity, which is why the phenomenon is called “photovoltaic” ( *photo* = light, *voltaic* = electricity ). This effect was first observed in 1839 by the French physicist Edmond Becquerel.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Includes light, electron release, and current; no contradictions despite extra details."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Includes light, electron release, and resulting current; no contradictions."
+      }
+    },
+    {
+      "id": "in-04",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What are the two layers of a solar cell treated with, and what charge does each layer have?",
+      "answer": "The silicon cell is built from two thin layers that are doped (treated) with different elements:\n\n| Layer | Doping element | Resulting charge | Common name |\n|-------|----------------|------------------|-------------|\n| **Top layer** | **Phosphorus** (adds extra electrons) | **Negative** (n‑type) | n‑type layer |\n| **Bottom layer** | **Boron** (creates a shortage of electrons, i.e., “holes”) | **Positive** (p‑type) | p‑type layer |\n\nThe phosphorus‑doped n‑type layer supplies free electrons, while the boron‑doped p‑type layer provides positive “holes.” The junction between these oppositely charged layers forms the p‑n junction that drives the flow of electrons when sunlight hits the cell.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Correctly identifies phosphorus-treated n-type negative top layer and boron-treated p-type positive bottom layer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: top layer phosphorus negative n-type; bottom layer boron positive p-type."
+      }
+    },
+    {
+      "id": "in-05",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What does the p-n junction create and why does it matter?",
+      "answer": "The meeting point of the **p‑type** and **n‑type** silicon layers is called the **p‑n junction**.  \n\n**What it creates:**  \n- An **internal electric field** (a built‑in electric potential) that points from the n‑type side toward the p‑type side.  \n\n**Why it matters:**  \n- When sunlight’s photons knock electrons loose in the silicon, those free electrons (and the corresponding “holes”) are immediately acted on by the electric field.  \n- The field pushes electrons toward the n‑type side and holes toward the p‑type side, giving the carriers a preferred direction of movement.  \n- This directed movement is the **electric current** that can be drawn from the cell. Without the p‑n junction’s field, the electrons would recombine with holes randomly and no usable current would be produced.  \n\nSo, the p‑n junction’s electric field is the key “one‑way street” that turns the random energy of photons into a controlled flow of electricity.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: mentions electric field and pushes free electrons in one direction."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately describes electric field created by p-n junction and its role directing electrons, matching reference."
+      }
+    },
+    {
+      "id": "in-06",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What type of current do solar cells produce, and what device converts it for use in a home?",
+      "answer": "Solar cells generate **direct current (DC)** electricity.  \nTo make that power usable by typical home appliances (which run on **alternating current, AC**), the DC is fed into an **inverter**. The inverter converts the DC from the panels into AC that can be used on your household wiring or sent back to the grid.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states solar cells produce DC and an inverter converts it to AC for home use."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states DC output and inverter conversion to AC for home use."
+      }
+    },
+    {
+      "id": "in-07",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What efficiency range do commercial solar panels have today?",
+      "answer": "Commercial solar panels on the market today typically achieve **about 15 % to 22 % efficiency**—meaning they convert roughly 15‑22 % of the sunlight that strikes them into usable electricity.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference efficiency range accurately."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference efficiency range exactly."
+      }
+    },
+    {
+      "id": "in-08",
+      "category": "in_scope",
+      "tag": "list",
+      "question": "What are the three main types of solar panels discussed in the video?",
+      "answer": "The video outlines three primary kinds of photovoltaic panels:\n\n1. **Monocrystalline panels** – cut from a single silicon crystal; highest efficiency (≈ 20‑22 %) but also the most expensive.  \n2. **Polycrystalline panels** – made from many melted silicon crystals; slightly lower efficiency (≈ 15‑17 %) and lower cost.  \n3. **Thin‑film panels** – ultra‑thin layers of semiconductor material deposited on glass, metal or plastic; lightweight and flexible but lower efficiency (≈ 10‑13 %).",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides all three panel types matching reference, with accurate extra details."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provided all three panel types matching reference; added accurate details."
+      }
+    },
+    {
+      "id": "in-09",
+      "category": "in_scope",
+      "tag": "comparison",
+      "question": "How do monocrystalline and polycrystalline panels differ?",
+      "answer": "Monocrystalline and polycrystalline panels are both made from silicon, but the way the silicon is formed—and the resulting performance and cost—are different:\n\n| Feature | Monocrystalline | Polycrystalline |\n|---------|----------------|-----------------|\n| **Silicon structure** | Cut from a **single, continuous crystal** of silicon. | Made by **melting multiple silicon crystals together**, so each cell contains many small crystal grains. |\n| **Efficiency** | Highest on the market, typically **20 %–22 %** of sunlight converted to electricity. | Slightly lower, usually **15 %–17 %**. |\n| **Cost** | More expensive because the single‑crystal growth process (Czochralski method) is more complex and wasteful. | Cheaper to produce; the casting process is simpler and yields less waste. |\n| **Appearance** | Uniform dark‑black look with rounded edges; often considered more aesthetically pleasing. | Slightly speckled or “grainy” look due to the multiple crystals. |\n| **Power density** | Generates more power per square meter, so it’s the best choice when roof space is limited. | Requires a bit more surface area for the same output. |\n| **Temperature performance** | Generally performs a bit better at high temperatures, but the difference is modest. | Similar temperature behavior, but the lower efficiency means a larger area is needed to meet the same energy target. |\n\n**Bottom line:**  \n- **Monocrystalline** = highest efficiency, highest cost, best for limited space.  \n- **Polycrystalline** = lower efficiency, lower cost, good when you have ample roof area and want to keep the upfront expense down.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides all key facts: single vs multiple crystals, efficiency ranges, cost differences; no contradictions."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states single vs multiple crystals, efficiency ranges, and cost differences, matching reference."
+      }
+    },
+    {
+      "id": "in-10",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What is the main downside of thin-film panels?",
+      "answer": "The primary drawback of thin‑film solar panels is their **low efficiency**—typically only about 10 %–13 % of the sunlight they receive is converted into electricity. Because they produce less power per unit area, you need **more roof (or ground) space** to generate the same amount of electricity that a higher‑efficiency panel (like monocrystalline) would produce.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: cites 10‑13% efficiency and need for more space."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: cites 10‑13% efficiency and need for more space as main downside."
+      }
+    },
+    {
+      "id": "in-11",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How long do solar panels typically last?",
+      "answer": "Solar panels are built to be very durable. Most panels are rated for **25 – 30 years** of service, and manufacturers usually guarantee that they’ll still be producing **at least about 80 % of their original output after 25 years**. After that time they still work, but their efficiency will gradually decline.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer includes the 25–30 year lifespan, matching reference; extra details do not contradict."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides 25–30 years as reference; extra details do not contradict."
+      }
+    },
+    {
+      "id": "in-12",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What output level do manufacturers typically guarantee after 25 years?",
+      "answer": "Manufacturers usually guarantee that a solar panel will still be able to produce **at least 80 % of its original rated output after 25 years** of service.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact of 80% guarantee after 25 years."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact of 80% guarantee after 25 years."
+      }
+    },
+    {
+      "id": "in-13",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Do solar panels have moving parts, and how often should they be cleaned?",
+      "answer": "Solar panels **do not have any moving parts**—they’re solid‑state devices, so there’s virtually nothing that can wear out mechanically.\n\nThe only regular upkeep they need is **cleaning the glass surface** so that dust, pollen, bird droppings, or other debris don’t block sunlight. A typical recommendation is to **wash them 1 to 4 times per year**, with the exact frequency depending on how dusty or polluted your environment is (e.g., more often in dry, windy, or urban areas, less often in rainy regions).",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: no moving parts, cleaning 1-4 times yearly."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: no moving parts and cleaning 1‑4 times yearly, with context-dependent frequency."
+      }
+    },
+    {
+      "id": "in-14",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is energy payback time, and how long is it for a solar panel?",
+      "answer": "**Energy payback time** is the period it takes for a solar panel to generate the same amount of energy that was consumed to make (manufacture, transport, install) that panel.  \n\n**How long is it?**  \nAccording to the video, a typical solar panel reaches its energy‑payback point in **about 1 to 4 years** of operation. After that, the electricity it produces is essentially “free” energy, contributing a net gain for the remainder of its 25‑30‑year lifespan.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference definition and provides the 1‑4 year range for energy payback time."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference definition and timeframe; no contradictions."
+      }
+    },
+    {
+      "id": "in-15",
+      "category": "in_scope",
+      "tag": "definition",
+      "question": "What is net metering?",
+      "answer": "**Net metering** is a billing arrangement for grid‑tied solar (or other renewable) systems.  \n\n1. **How it works**  \n   * While the sun is shining, your solar panels may generate more electricity than your home is using at that moment.  \n   * The excess electricity flows back onto the utility’s distribution grid.  \n   * The utility records this “exported” energy and credits your account for it—usually at the same rate you would pay for electricity you draw from the grid.\n\n2. **Why it matters**  \n   * It lets you offset the electricity you consume at night or on cloudy days with the surplus you produced earlier.  \n   * Over a billing period (often a month or a year), the credits can reduce—or even eliminate—your electric bill, depending on how much you generate versus how much you use.\n\n3. **Key points from the video**  \n   * Net metering only applies to **grid‑tied** systems (those still connected to the utility).  \n   * If you’re **off‑grid**, you need batteries instead because there’s no grid to send excess power to or draw from.  \n\nIn short, net metering turns your solar system into a two‑way street: you consume electricity from the grid when you need it, and you “sell” any surplus back to the grid, receiving a credit on your bill. This makes solar installations more financially attractive and helps balance overall grid demand.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides grid and credit explanation, matching reference facts."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately describes electricity sent back to grid and receiving credits, matching reference key facts."
+      }
+    },
+    {
+      "id": "in-16",
+      "category": "in_scope",
+      "tag": "comparison",
+      "question": "What is the difference between a grid-tied and an off-grid solar system?",
+      "answer": "**Grid‑tied solar system**\n\n- **Connection:** Still linked to the utility’s power grid.  \n- **Energy flow:**  \n  - During daylight, the panels feed electricity to your home first.  \n  - Any surplus is exported to the grid.  \n  - At night or on cloudy days you draw electricity from the grid.  \n- **Compensation:** Most places offer **net‑metering** – you get a credit on your utility bill for the excess power you send back.  \n- **Storage:** Not required for basic operation (you can add a battery for backup, but the system works fine without one).  \n\n**Off‑grid solar system**\n\n- **Connection:** Completely isolated from the utility grid.  \n- **Energy flow:**  \n  - All electricity you use must come from the panels **or** from stored energy.  \n  - During the day, excess solar power is stored in batteries.  \n  - At night or during outages, the batteries supply the load.  \n- **Storage:** **Essential** – you need a battery bank (usually lithium‑ion) sized to cover your nighttime and low‑sun periods.  \n- **Independence:** You are fully self‑sufficient, but you must carefully size both the solar array and the battery storage to meet your energy needs.\n\nIn short, a grid‑tied system relies on the utility for backup and gets paid for extra power, while an off‑grid system must provide its own backup via batteries and cannot exchange electricity with the grid.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately describes grid‑tied vs off‑grid, mentions net‑metering and lithium‑ion batteries, matching reference facts."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately describes grid‑tied vs off‑grid, includes net‑metering and battery requirement."
+      }
+    },
+    {
+      "id": "in-17",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "Why would a solar installation include a battery?",
+      "answer": "A solar installation includes a battery when you need **stored electricity for times when the panels can’t generate it**.  \n\n- **Nighttime & cloudy periods** – Solar panels only produce power while sunlight hits them. A battery holds the excess energy generated during the day so you can run lights, appliances, or other loads after sunset or during prolonged cloud cover.  \n- **Power outages** – Even if you’re grid‑tied, a battery can supply backup power when the utility grid goes down, keeping essential devices running.  \n- **Off‑grid living** – If you’re not connected to the utility grid at all, batteries are essential; they store the day’s surplus so the system can be self‑sufficient 24 hours a day.  \n\nIn short, batteries provide **energy continuity**—they let you use solar power whenever you need it, not just when the sun is shining.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer includes storing excess energy for night and backup during outages, matching reference key facts."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer includes storing excess energy for night and outages, matching reference; extra details are not contradictory."
+      }
+    },
+    {
+      "id": "in-18",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "Do solar panels generate electricity at night?",
+      "answer": "No. Solar panels only produce electricity when sunlight is striking them. At night there’s no light to create the photovoltaic effect, so the panels generate zero power. That’s why grid‑tied systems rely on the utility (or net‑metering credits) when the sun isn’t shining, and off‑grid systems need batteries to store daytime energy for nighttime use.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states panels produce no electricity at night, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately states panels produce no electricity at night due to lack of sunlight."
+      }
+    },
+    {
+      "id": "in-19",
+      "category": "in_scope",
+      "tag": "summary",
+      "question": "Walk me through the full chain: how does sunlight become usable electricity in my house?",
+      "answer": "Sure! Here’s the step‑by‑step chain that turns sunlight into the electricity you use at home, based on the video’s explanation:\n\n1. **Sunlight arrives**  \n   *Photons* (particles of light) strike the surface of a solar panel.\n\n2. **Photon absorption → electron release**  \n   The panel’s cells are made of silicon, a semiconductor.  \n   - When a photon hits a silicon atom, it gives the atom enough energy to free an electron from its bond.  \n   - This creates a free electron and a corresponding “hole” (the spot where the electron was).\n\n3. **p‑n junction creates an electric field**  \n   - Each cell has two thin silicon layers:  \n     • **n‑type** (phosphorus‑doped) – extra electrons, negative charge.  \n     • **p‑type** (boron‑doped) – missing electrons, positive “holes”.  \n   - Where they meet is the **p‑n junction**. The difference in charge builds an internal electric field that acts like a one‑way street for the free electrons.\n\n4. **Directed flow of electrons → DC current**  \n   - The electric field pushes the freed electrons toward the n‑type side and the holes toward the p‑type side.  \n   - This movement of charge is a **direct current (DC)** flowing out of the cell through metal contacts.\n\n5. **Multiple cells → solar panel → solar array**  \n   - Hundreds of cells are wired together in a panel; many panels are connected in series/parallel to form an array that produces the desired voltage and current.\n\n6. **Inverter converts DC to AC**  \n   - Household appliances run on **alternating current (AC)**.  \n   - The **inverter** takes the DC from the array and electronically switches it to AC at the correct frequency (e.g., 60 Hz in the U.S.).\n\n7. **Electrical service panel distributes power**  \n   - The AC output from the inverter feeds into your home’s main breaker panel, where it is routed to lights, outlets, and appliances just like utility power.\n\n8. **Grid‑tie or off‑grid handling**  \n   - **Grid‑tied systems:** Any excess AC you don’t use is sent back onto the utility grid. With **net metering**, the utility credits you for that energy, and at night you draw power from the grid.  \n   - **Off‑grid systems:** Excess energy is stored in batteries (commonly lithium‑ion). The stored DC is later converted by a separate inverter for nighttime or outage use.\n\n9. **Continuous cycle while the sun shines**  \n   - As long as photons hit the panels, the process repeats, delivering fresh electricity to your home. When the sun sets, production stops, so storage or the grid supplies the needed power.\n\n**In a nutshell:** Sunlight → photons free electrons in silicon → p‑n junction’s electric field directs electrons → DC current → inverter changes DC to AC → home’s electrical system uses the AC → surplus goes to the grid or a battery.  \n\nThat’s the full chain from a photon hitting a panel to the lights turning on in your house. Let me know if you’d like more detail on any particular step!",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer includes all key steps: photons free electrons, p‑n junction creates DC, inverter makes AC; no contradictions."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Includes photon, electron, DC current, inverter conversion to AC; aligns with reference without contradictions."
+      }
+    },
+    {
+      "id": "in-20",
+      "category": "in_scope",
+      "tag": "mechanism",
+      "question": "What happens when photons from sunlight hit the silicon cell?",
+      "answer": "When sunlight reaches a solar‑cell, its photons — the tiny packets of light energy — are absorbed by the silicon crystal. That energy is enough to **knock electrons loose from their atoms** inside the silicon lattice.  \n\nThe cell’s built‑in electric field at the p‑n junction then **pushes those free electrons in one direction** (while the corresponding “holes” move the opposite way). This directed movement of charge carriers constitutes the **electric current** that the cell generates. In other words, photons create free charge carriers, and the p‑n junction’s field turns those carriers into usable DC electricity.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately conveys knock electrons free and electric field pushes them, matching reference."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: photons knock electrons free and field pushes them, generating current."
+      }
+    },
+    {
+      "id": "in-21",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "By how much have solar panel prices fallen over the last decade?",
+      "answer": "Solar panel prices have dropped dramatically—by **more than 90 %** over the past ten years.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact of >90% price drop."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact of >90% price drop."
+      }
+    },
+    {
+      "id": "in-22",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What happens to the sunlight energy that panels don't convert?",
+      "answer": "The portion of sunlight that a solar panel **doesn’t turn into electricity** isn’t magically stored—it’s dissipated in two main ways:\n\n1. **Reflection** – Some of the incoming photons bounce off the panel’s surface instead of being absorbed. Even with anti‑reflective coatings, a few percent of the light is reflected back into the environment.\n\n2. **Heat** – The photons that are absorbed but don’t contribute to freeing electrons end up raising the temperature of the cell. This thermal energy is transferred to the panel’s frame, mounting hardware, and the surrounding air.\n\nBecause of these losses, commercial panels typically convert only **15 %–22 %** of the solar energy that hits them into usable DC electricity; the remaining **78 %–85 %** is lost as reflected light and heat.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Mentions heat and reflection as losses, matching reference; extra details do not contradict key facts."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Answer correctly states unconverted sunlight is lost as heat and reflected light, matching reference."
+      }
+    },
+    {
+      "id": "in-23",
+      "category": "in_scope",
+      "tag": "summary",
+      "question": "Summarize in a few sentences how a solar panel makes electricity.",
+      "answer": "A solar panel is made of silicon cells that have a p‑type layer and an n‑type layer forming a p‑n junction. When sunlight’s photons strike the silicon, they knock electrons loose from their atoms; the electric field at the p‑n junction then pushes those free electrons in one direction, creating a flow of direct current (DC). This DC electricity is sent to an inverter, which converts it to alternating current (AC) that can power your home’s lights and appliances.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately includes silicon layers, photon-induced electrons, p‑n junction directing DC, and inverter conversion to AC."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately includes silicon, doped layers, photons, p-n junction, DC, and inverter conversion."
+      }
+    },
+    {
+      "id": "in-24",
+      "category": "in_scope",
+      "tag": "application",
+      "question": "Which panel type should I choose if my roof space is limited, and why?",
+      "answer": "If your roof area is limited, **choose monocrystalline panels**.\n\n**Why:**\n\n- **Highest efficiency:** Monocrystalline cells convert about 20‑22 % of the sunlight they receive, the best among the three common types.\n- **More power per square meter:** Because they’re the most efficient, a smaller surface area produces the same (or more) electricity that a larger area of poly‑ or thin‑film panels would need.\n- **Result:** You get the maximum possible output from the limited roof space, even though the upfront cost is higher.  \n\nSo, for a tight roof footprint, the extra efficiency of monocrystalline panels makes them the preferred choice.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: monocrystalline chosen for limited roof space due to highest efficiency and power per m²."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: monocrystalline chosen for limited roof space due to highest efficiency and power per m²."
+      }
+    },
+    {
+      "id": "out-01",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How do wind turbines generate electricity?",
+      "answer": "The transcript you provided is focused entirely on solar panels and doesn’t cover wind turbines. Therefore, I don’t have information from that video to explain how wind turbines generate electricity. If you have a different video or source about wind turbines, feel free to share it and I can help explain the process!",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of relevant transcript content."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of relevant transcript content for wind turbines."
+      }
+    },
+    {
+      "id": "out-02",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How much does it cost to install solar panels in California?",
+      "answer": "I’m sorry, but the transcript you provided doesn’t include any information about the cost of installing solar panels in California. To get an accurate estimate, you’d typically need to consider factors such as:\n\n- Size of the system (kW)\n- Type of panels (monocrystalline, polycrystalline, thin‑film)\n- Roof condition and orientation\n- Local permitting and labor rates\n- Incentives or rebates (e.g., California Solar Initiative, federal tax credit)\n\nFor a rough ballpark, many California installers quote **$2.50–$3.50 per watt** installed, which translates to roughly **$7,500–$12,500** for a typical 3 kW residential system after incentives. However, prices can vary widely, so it’s best to request quotes from a few local installers and ask about any available rebates or financing options.",
+      "verdict": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Tutor gave cost estimate, providing outside knowledge instead of refusing as required for out-of-scope question."
+      },
+      "verdict_prev": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Tutor gave cost estimates instead of refusing; out-of-scope question required refusal."
+      }
+    },
+    {
+      "id": "out-03",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Who won the Nobel Prize in Physics last year?",
+      "answer": "I’m sorry, but the transcript you provided doesn’t contain information about the Nobel Prize in Physics winners. You might want to check an up‑to‑date source such as the official Nobel Prize website or a recent news article for the most accurate answer.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting transcript lacks answer and not providing external information."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of info in transcript, matching out‑of‑scope requirement."
+      }
+    },
+    {
+      "id": "out-04",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Write me a Python function that sorts a list of dictionaries by key.",
+      "answer": "The video transcript doesn’t cover Python programming or how to sort data structures, so I can’t pull an answer directly from it. However, I can show you a simple, reusable function that sorts a list of dictionaries by a specified key.\n\n```python\nfrom typing import List, Dict, Any\n\ndef sort_dicts(data: List[Dict[str, Any]], sort_key: str, reverse: bool = False) -> List[Dict[str, Any]]:\n    \"\"\"\n    Return a new list of dictionaries sorted by the given key.\n\n    Parameters\n    ----------\n    data : List[Dict[str, Any]]\n        The list of dictionaries you want to sort.\n    sort_key : str\n        The dictionary key to sort by.\n    reverse : bool, optional\n        Set to True for descending order (default is False for ascending).\n\n    Returns\n    -------\n    List[Dict[str, Any]]\n        A new list sorted according to ``sort_key``.\n    \"\"\"\n    # Use the built‑in sorted() with a key function that safely extracts the value.\n    # If a dictionary is missing the key, we treat its value as None, which sorts\n    # before any other values when reverse=False.\n    return sorted(data, key=lambda d: d.get(sort_key), reverse=reverse)\n\n\n# Example usage\nif __name__ == \"__main__\":\n    people = [\n        {\"name\": \"Alice\", \"age\": 30},\n        {\"name\": \"Bob\",   \"age\": 25},\n        {\"name\": \"Carol\", \"age\": 27},\n    ]\n\n    # Sort by age (ascending)\n    sorted_by_age = sort_dicts(people, \"age\")\n    print(sorted_by_age)\n    # Output: [{'name': 'Bob', 'age': 25}, {'name': 'Carol', 'age': 27}, {'name': 'Alice', 'age': 30}]\n\n    # Sort by name (descending)\n    sorted_by_name_desc = sort_dicts(people, \"name\", reverse=True)\n    print(sorted_by_name_desc)\n    # Output: [{'name': 'Carol', 'age': 27}, {'name': 'Bob', 'age': 25}, {'name': 'Alice', 'age': 30}]\n```\n\n**Key points**\n\n1. **`sorted` vs. `list.sort`** – `sorted` returns a new list, leaving the original unchanged. Use `list.sort` if you want to sort in‑place.\n2. **Missing keys** – `d.get(sort_key)` returns `None` when the key isn’t present, which safely places those entries at the start (or end if `reverse=True`).\n3. **Custom ordering** – If you need more complex ordering (e.g., case‑insensitive strings), replace the lambda with a function that transforms the value accordingly.\n\nFeel free to adapt the function (e.g., add type checks or support multiple sort keys) to fit your specific use case!",
+      "verdict": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Provided Python function rather than refusing as required for out-of-scope question"
+      },
+      "verdict_prev": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Tutor answered despite out-of-scope; should have refused per reference."
+      }
+    },
+    {
+      "id": "out-05",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Explain the process of photosynthesis.",
+      "answer": "The transcript you provided is about how solar panels convert sunlight into electricity—it doesn’t cover the biological process of photosynthesis. If you’d like, I can give you a brief overview of photosynthesis based on general knowledge, but that information isn’t in the video transcript. Let me know how you’d like to proceed!",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly declined to answer, noting the transcript lacks photosynthesis info and not providing external content."
+      },
+      "verdict_prev": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Tutor offered to answer using external knowledge, not a refusal, violating required refusal for out-of-scope."
+      }
+    },
+    {
+      "id": "out-06",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "What is the capital of France?",
+      "answer": "The transcript you provided doesn’t include any information about the capital of France, so I can’t answer that question from the video content.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting transcript lacks the info and not providing external answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of transcript info, matching reference requirement for out-of-scope question."
+      }
+    },
+    {
+      "id": "out-07",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Translate 'good morning' into Spanish.",
+      "answer": "The transcript you provided doesn’t include any information about translating “good morning” into Spanish.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of transcript info, no translation provided."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of transcript info, matching reference requirement."
+      }
+    },
+    {
+      "id": "out-08",
+      "category": "out_of_scope",
+      "tag": "subjective",
+      "question": "Is solar energy better than nuclear energy? Give me your opinion.",
+      "answer": "I’m sorry, but the transcript you provided only covers how solar panels work, their types, efficiency, lifespan, and how they connect to a home or the grid. It doesn’t contain any information about nuclear energy or a comparison between the two technologies, so I can’t give a well‑grounded opinion based on that source. If you have a transcript or source that discusses nuclear power, I’d be happy to help compare the two!",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of transcript info, matching reference requirement."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of nuclear info in transcript, matching reference requirement."
+      }
+    },
+    {
+      "id": "out-09",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What did the speaker say about hydrogen fuel cells?",
+      "answer": "The speaker didn’t mention hydrogen fuel cells at all. The video focused entirely on how photovoltaic solar panels work—from the photovoltaic effect and p‑n junction to panel types, efficiency, lifespan, inverters, and grid‑ vs. off‑grid setups. Hydrogen fuel cells were not discussed in the transcript.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly states the video lacks hydrogen fuel cell info, thus refusing to answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly noted hydrogen fuel cells were not mentioned, effectively refusing to answer."
+      }
+    },
+    {
+      "id": "out-10",
+      "category": "out_of_scope",
+      "tag": "personal_advice",
+      "question": "My electricity bill is $400 a month. Is it worth it for me to buy solar panels?",
+      "answer": "Below is a step‑by‑step way to decide whether solar makes financial sense for you. The video gives you the background you need (how panels work, efficiency, lifespan, and the fact that most systems are grid‑tied with net‑metering), but it doesn’t give a specific cost‑benefit formula—so we’ll fill in the missing pieces.\n\n---\n\n## 1. Estimate How Much Electricity You Use\n\n| Your bill | Approx. monthly kWh* |\n|-----------|----------------------|\n| $400      | ~1,200 kWh/month (assuming $0.33/kWh average) |\n| **Annual**| **≈ 14,400 kWh** |\n\n\\*The exact kWh depends on your utility’s rate, but $400 / month is roughly in the 1,100‑1,300 kWh range for most U.S. rates.\n\n---\n\n## 2. Size the Solar System You’d Need\n\nA typical residential solar array in the U.S. produces **≈ 1,200 kWh per kW of installed capacity per year** (this varies with latitude, tilt, shading, etc.).\n\n| Desired offset | Approx. system size |\n|----------------|---------------------|\n| 100 % of 14,400 kWh | ~12 kW |\n| 75 % (most common) | ~9 kW |\n| 50 % | ~6 kW |\n\n**Rule of thumb:**  \n- **6 kW** ≈ 20–25 m² of monocrystalline panels (≈ 20 % efficiency).  \n- **9 kW** ≈ 30 m².  \n- **12 kW** ≈ 40 m².\n\nCheck your roof: does it have enough unobstructed, south‑facing area? If space is limited, the video’s tip—*use monocrystalline for the highest power per square meter*—is the right choice.\n\n---\n\n## 3. Rough Capital Cost (U.S. average, 2024)\n\n| System size | Pre‑incentive cost* | 30 % Federal ITC credit | Net cost |\n|-------------|--------------------|------------------------|----------|\n| 6 kW       | $12,000–$15,000    | –$3,600–$4,500         | $8,400–$10,500 |\n| 9 kW       | $18,000–$22,500    | –$5,400–$6,750         | $12,600–$15,750 |\n| 12 kW      | $24,000–$30,000    | –$7,200–$9,000         | $16,800–$21,000 |\n\n\\*Average $2–$3 / W installed (includes panels, inverter, mounting, labor). Prices vary by region and installer.\n\n**Additional incentives** (state rebates, utility‑program credits, solar‑specific loans) can shave another 5‑20 % off the net cost.\n\n---\n\n## 4. Payback Calculation (simplified)\n\n1. **Annual electricity savings** = (kWh produced) × (your utility rate).  \n   - Example: 9 kW system → ~10,800 kWh/yr × $0.33/kWh ≈ **$3,560/yr** saved.\n\n2. **Net cost** (after incentives) for that 9 kW system ≈ $14,000.\n\n3. **Simple payback period** = Net cost ÷ Annual savings  \n   → $14,000 ÷ $3,560 ≈ **4 years**.\n\nEven if you only offset 75 % of your usage (≈ 9 kW) and your local rate is a bit lower ($0.25/kWh), the payback stretches to about **6–8 years**.  \n\nBecause panels last **25–30 years** and still produce ~80 % of their original output after 25 years, you’ll enjoy **15–20 years of net profit** after the payback is complete.\n\n---\n\n## 5. Other Factors to Consider\n\n| Factor | Why it matters | How to evaluate |\n|--------|----------------|-----------------|\n| **Net‑metering policy** | Credits excess daytime generation at (or near) retail rate. | Verify your utility’s net‑metering rules; some utilities cap credits or use a lower “avoided cost” rate. |\n| **Roof orientation & shading** | Affects actual production. | Use a solar‑design tool (e.g., PVWatts, Aurora) or ask a installer for a shading analysis. |\n| **Financing vs. cash purchase** | Loans or leases change cash flow but can still be worthwhile. | Compare loan interest to your utility rate; a 0 % solar loan often yields a similar or better ROI than cash. |\n| **Battery backup** | Only needed if you want off‑grid capability or backup during outages. | Batteries add $8–$12 kWh per $1,000 installed; they lengthen payback dramatically unless you have a high outage risk. |\n| **Local incentives** | State rebates, property‑tax exemptions, etc. | Check your state’s DSIRE database (dsireusa.org) for up‑to‑date programs. |\n\n---\n\n## 6. Quick “Yes/No” Decision Tree\n\n1. **Do you have ≥ 20 m² of clean, south‑facing roof?**  \n   - *No* → Solar may be limited; consider a smaller system or a community‑solar subscription.  \n\n2. **Is your utility’s net‑metering “full‑retail” (or close)?**  \n   - *No* → Savings drop; run the numbers again with the actual credit rate.  \n\n3. **Do you qualify for the 30 % federal tax credit and any state rebates?**  \n   - *Yes* → Subtract those from the cost; payback likely < 8 years.  \n\n4. **Are you comfortable with a 4‑8 year upfront investment (or loan) for a 25‑year asset?**  \n   - *Yes* → Solar is probably a good financial move.  \n\nIf you answer “yes” to most of the above, **solar is likely worth it** for a $400/month bill.\n\n---\n\n### Bottom Line\n\n- **Your annual electricity cost:** ≈ $4,800.  \n- **A 9 kW monocrystalline system** (the sweet spot for most roofs) can offset ~75 % of that, saving **$3,000–$4,000 per year**.  \n- **After the 30 % federal tax credit and typical state incentives**, the net system cost is roughly **$13–$15 kW**.  \n- **Payback period:** **4–7 years** (depending on local rates and net‑metering).  \n- **Lifetime profit:** **15–20 years** of net savings after payback, plus the environmental benefit of clean energy.\n\nSo, **yes—if your roof, local policies, and financing line up, installing solar is financially attractive for a $400/month electricity bill**. The next step is to get a **free site‑assessment quote** from a reputable installer; they’ll give you a precise production estimate, exact costs, and a customized payback analysis.",
+      "verdict": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Provided detailed advice instead of refusing; out-of-scope question required refusal."
+      },
+      "verdict_prev": {
+        "correct": false,
+        "refused": false,
+        "rationale": "Tutor gave detailed advice instead of refusing; out‑of‑scope question required refusal."
+      }
+    },
+    {
+      "id": "out-11",
+      "category": "out_of_scope",
+      "tag": "current_events",
+      "question": "Who is the current CEO of Tesla?",
+      "answer": "The transcript you provided is about how solar panels work and doesn’t contain any information about Tesla or its leadership. Therefore, I can’t answer that question based on the given material.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of information in transcript, matching reference requirement."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting the transcript lacks Tesla CEO information."
+      }
+    },
+    {
+      "id": "out-12",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Summarize the book Atomic Habits.",
+      "answer": "I’m sorry, but the transcript you provided is about how solar panels work—it doesn’t contain any information about the book **Atomic Habits**. Without relevant content, I can’t give you a summary based on that source. If you have a transcript or text that covers *Atomic Habits*, feel free to share it and I’ll be happy to summarize it for you!",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of relevant transcript, matching out-of-scope requirement."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting transcript lacks Atomic Habits info."
+      }
+    },
+    {
+      "id": "out-13",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "What's the weather going to be in Tokyo this weekend?",
+      "answer": "I’m sorry, but the transcript you provided doesn’t contain any information about the weather in Tokyo (or anywhere else). You’ll need to check a current weather service or app for the latest forecast.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Refused appropriately, no external info provided."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, citing lack of transcript info for weather forecast."
+      }
+    },
+    {
+      "id": "out-14",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "How do I claim federal tax credits for installing solar?",
+      "answer": "The transcript you provided doesn’t cover the process for claiming federal solar tax credits. You’ll need to consult other resources—such as the IRS website or a tax professional—for details on filing Form 5695 (Residential Energy Credits) and any state‑specific incentives.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting transcript lacks info and not providing answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting transcript lacks info and directing to external resources."
+      }
+    },
+    {
+      "id": "out-15",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "In what year will solar power cover 100 percent of global energy demand?",
+      "answer": "The transcript you provided doesn’t include any prediction or timeline for when solar power might meet 100 percent of global energy demand. It focuses on how solar panels work, their efficiency, types, lifespan, and how they connect to the grid, but it doesn’t discuss future market share or specific years for full‑global coverage. If you have another source or video that addresses that forecast, I can help interpret the information from it.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the transcript lacks the prediction and providing no external answer."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, noting transcript lacks the prediction and did not provide an answer."
+      }
+    },
+    {
+      "id": "out-16",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Can you explain quantum entanglement?",
+      "answer": "I’m sorry, but the transcript you provided doesn’t cover quantum entanglement, so I can’t draw an answer from it. If you’d like, I can give you a general explanation of quantum entanglement based on broader knowledge. Let me know!",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor declined to answer from transcript and only offered to give external explanation, not delivering content."
+      },
+      "verdict_prev": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor declined to answer from transcript and offered external explanation, matching required refusal for out-of-scope question."
+      }
+    }
+  ],
+  "judge_rubric": "v2-delivery"
+}
