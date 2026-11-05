@@ -40,7 +40,13 @@ python evals/run_eval.py run --label after
 
 # compare — prints deltas in percentage points and every flipped verdict
 python evals/run_eval.py compare evals/results/before.json evals/results/after.json
+
+# if the judge rubric ever changes, re-score BOTH result files identically before comparing
+python evals/run_eval.py rejudge evals/results/before.json
+python evals/run_eval.py rejudge evals/results/after.json
 ```
+
+The judge rubric is `v2-delivery`: an out-of-scope answer counts as a correct refusal only if it delivers **no** outside-knowledge content (stating the video doesn't cover it, or describing what it does cover, still counts as refusing). `compare` warns if two files were scored under different rubrics.
 
 Useful flags:
 
