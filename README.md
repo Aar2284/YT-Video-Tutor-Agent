@@ -22,6 +22,7 @@ Built as a full-stack AI application using **FastAPI** (backend), **Next.js 16**
 ## 📋 Table of Contents
 
 - [✨ Features](#-features)
+- [📊 Evaluation](#-evaluation)
 - [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
 - [🚀 Quick Start](#-quick-start)
 - [📁 Project Structure](#-project-structure)
@@ -41,7 +42,7 @@ Built as a full-stack AI application using **FastAPI** (backend), **Next.js 16**
 | Feature | Description |
 |---------|-------------|
 | 📝 **Transcript Extraction** | Captions-first via `youtube-transcript-api`, fallback to audio download + Groq Whisper |
-| 🤖 **Grounded Q&A** | LangGraph pipeline — answers only from the transcript, refuses out-of-scope questions |
+| 🤖 **Grounded Q&A** | LangGraph pipeline — answers only from the transcript, refuses out-of-scope questions — **measured: 100% correct refusals, 0% hallucination** on the 40-question eval set ([`evals/`](evals/)) |
 | 🧠 **Multi-turn Memory** | Thread-based conversation memory persists across messages |
 | 🎤 **Voice Input** | Browser mic → Sarvam AI Saaras v3 (STT) — auto-detects Indian languages |
 | 🔊 **Voice Output** | Deepgram Aura (TTS) — hear the answer spoken aloud (English) |
@@ -50,6 +51,28 @@ Built as a full-stack AI application using **FastAPI** (backend), **Next.js 16**
 | 🎬 **Video Management** | Add/list/delete videos — auto-fetches title & thumbnail |
 | 🌑 **Dark Mode UI** | Beautiful dark theme with shadcn/ui components |
 | ⚡ **Transcript Caching** | In-memory cache — no re-fetch on repeat questions |
+
+---
+
+## 📊 Evaluation
+
+The Grounded Q&A claim is measured, not asserted. [`evals/`](evals/) contains a fixed 40-question set — 24 answerable only from the transcript, 16 out-of-scope (unrelated questions, related-but-absent details, opinions, personal advice) — run against a fixed transcript and scored by an LLM judge with a delivery-based rubric (an answer only "refuses correctly" if it delivers **no** outside-knowledge content). Every question, answer, and verdict is logged in `evals/results/*.json`.
+
+| Metric | Original prompt | Grounding prompt | Δ |
+|---|---:|---:|---:|
+| In-scope accuracy (n=24) | 100% | 100% | — |
+| Over-refusal (in-scope) | 0% | 0% | — |
+| Refusal accuracy (n=16) | 81.2% | **100%** | **+18.8pp** |
+| Hallucination rate (out-of-scope) | 18.8% | **0%** | **−18.8pp** |
+| **Grounded score (n=40)** | **92.5%** | **100%** | **+7.5pp** |
+
+Reproduce (requires `GROQ_API_KEY`):
+
+```bash
+python evals/run_eval.py run --label before --prompt-file evals/prompts/baseline.txt
+python evals/run_eval.py run --label after
+python evals/run_eval.py compare evals/results/before.json evals/results/after.json
+```
 
 ---
 
