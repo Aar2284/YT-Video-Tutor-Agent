@@ -163,7 +163,8 @@ def compute_metrics(items: list) -> dict:
 
 
 def run(args) -> None:
-    dataset = json.loads((EVALS / "dataset.json").read_text(encoding="utf-8"))
+    dataset_path = Path(args.dataset) if args.dataset else EVALS / "dataset.json"
+    dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
     transcript = (EVALS / dataset["transcript"]).read_text(encoding="utf-8")
 
     if args.prompt_file:
@@ -228,6 +229,7 @@ def run(args) -> None:
         "prompt": prompt,
         "context_used": not args.no_context,
         "dataset": dataset["name"],
+        "dataset_path": str(dataset_path),
         "judge_rubric": JUDGE_RUBRIC,
         "metrics": metrics,
         "items": results,
@@ -285,7 +287,8 @@ def rejudge(args) -> None:
     Saves in place (previous verdicts kept as 'verdict_prev') unless --out is given."""
     path = Path(args.result)
     data = json.loads(path.read_text(encoding="utf-8"))
-    dataset = json.loads((EVALS / "dataset.json").read_text(encoding="utf-8"))
+    ds_path = Path(data.get("dataset_path") or (EVALS / "dataset.json"))
+    dataset = json.loads(ds_path.read_text(encoding="utf-8"))
     meta_by_id = {i["id"]: i for i in dataset["items"]}
 
     jm = judge_llm()
@@ -351,6 +354,7 @@ def main() -> None:
     r = sub.add_parser("run", help="run the eval set")
     r.add_argument("--label", required=True, help="result label, e.g. before / after")
     r.add_argument("--prompt-file", help="prompt file; default is current SYSTEM in graph.py")
+    r.add_argument("--dataset", help="dataset JSON path (default evals/dataset.json)")
     r.add_argument("--limit", type=int, help="only run first N items (smoke test)")
     r.add_argument("--no-context", action="store_true", help="run with empty transcript (hallucination stress test)")
     r.add_argument("--out", help="output path (default evals/results/<label>.json)")
