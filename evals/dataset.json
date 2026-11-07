@@ -323,6 +323,70 @@
       "question": "Can you explain quantum entanglement?",
       "reference": "Unrelated to the video. The tutor must refuse.",
       "expected_facts": []
+    },
+    {
+      "id": "in-25",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "Panels last 25 to 30 years and energy payback takes 1 to 4 years. In the worst case (30-year life, 4-year payback), how many years does a panel operate net-positive?",
+      "reference": "26 years — 30-year lifespan minus the worst-case 4-year payback.",
+      "expected_facts": ["26", "30", "4"]
+    },
+    {
+      "id": "in-26",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "Monocrystalline panels are around 20-22% efficient and thin-film around 10-13%. Roughly how many times more efficient is monocrystalline than thin-film?",
+      "reference": "Roughly twice (about 2x): 20-22% is approximately double 10-13%.",
+      "expected_facts": ["twice", "double", "2"]
+    },
+    {
+      "id": "in-27",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "Manufacturers guarantee 80% of original output after 25 years. What total degradation does that allow at most, and roughly how much is that per year on average?",
+      "reference": "At most 20% total degradation over 25 years, which is roughly 0.8% per year (accept 'under 1% per year').",
+      "expected_facts": ["20", "0.8", "1"]
+    },
+    {
+      "id": "in-28",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "List every efficiency range the video gives, for commercial panels overall and for each of the three panel types.",
+      "reference": "Commercial overall: 15-22%. Monocrystalline: around 20-22%. Polycrystalline: around 15-17%. Thin-film: around 10-13%.",
+      "expected_facts": ["15", "22", "17", "10", "13"]
+    },
+    {
+      "id": "in-29",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "Explain step by step why a grid-tied home usually doesn't need a battery while an off-grid home does.",
+      "reference": "Panels produce nothing at night. Grid-tied homes export daytime excess to the grid (net metering credits) and draw from the grid at night, so no storage is needed. Off-grid homes have no grid to export to or draw from, so they must store daytime excess in batteries for night use.",
+      "expected_facts": ["night", "net metering", "batter"]
+    },
+    {
+      "id": "in-30",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "What TWO coping mechanisms does the video give for the fact that panels generate nothing at night?",
+      "reference": "1) Batteries (usually lithium-ion) store daytime excess for night/outage use; 2) grid connection — grid-tied homes draw from the grid at night and are credited for daytime exports via net metering.",
+      "expected_facts": ["batter", "grid"]
+    },
+    {
+      "id": "in-31",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "Name both dopant elements used in a solar cell, the charge each layer ends up with, and what forms where the two layers meet.",
+      "reference": "Phosphorus → top n-type layer with extra electrons (negative). Boron → bottom p-type layer with holes, positive. Where they meet (the p-n junction) an electric field forms.",
+      "expected_facts": ["phosphorus", "boron", "electric field"]
+    },
+    {
+      "id": "in-32",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "Rank thin-film, polycrystalline, and monocrystalline from highest to lowest efficiency, and give each range.",
+      "reference": "1) Monocrystalline ~20-22%, 2) Polycrystalline ~15-17%, 3) Thin-film ~10-13%.",
+      "expected_facts": ["monocrystalline", "20", "polycrystalline", "15", "thin-film", "10"]
     }
   ]
 }
