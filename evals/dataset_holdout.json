@@ -1,0 +1,152 @@
+{
+  "name": "yt-video-tutor-holdout-v1",
+  "version": 1,
+  "transcript": "transcript_holdout.txt",
+  "description": "HOLDOUT set. 18 fresh questions written after the grounding prompt was frozen, against a second (real YouTube) transcript. Run once, report separately from the dev set. 10 in-scope (4 multi-step/number-based), 8 out-of-scope traps.",
+  "items": [
+    {
+      "id": "h-in-01",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How did the speaker's relationship end, and how was he told?",
+      "reference": "He received an Instagram DM in the middle of the night from his girlfriend saying, in effect, 'I don't think this is going to work out.'",
+      "expected_facts": ["instagram", "dm", "middle of the night"]
+    },
+    {
+      "id": "h-in-02",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How long was the relationship that ended?",
+      "reference": "Two years.",
+      "expected_facts": ["2-year", "two-year", "2 years"]
+    },
+    {
+      "id": "h-in-03",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "Who was the first person the speaker confided in, and what did he discover about that same person two months after the breakup?",
+      "reference": "He first confided in his friend (called Mark). Two months after the breakup he saw an Instagram post showing Mark together with his ex, with a heart in the caption.",
+      "expected_facts": ["mark", "2 months", "ex"]
+    },
+    {
+      "id": "h-in-04",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What was the speaker's daily cardio routine while he was getting back on track?",
+      "reference": "Running on the treadmill for about 30 minutes every day.",
+      "expected_facts": ["30 minutes", "treadmill"]
+    },
+    {
+      "id": "h-in-05",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "What are the three main lessons of the video, in order?",
+      "reference": "1) When you think you're at the bottom, you've got nothing to lose — only up. 2) Nobody cares about you as much as you do. 3) You can't wait for the perfect moment.",
+      "expected_facts": ["nothing to lose", "nobody cares", "perfect moment"]
+    },
+    {
+      "id": "h-in-06",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What exact phrase did the little voice in the speaker's head say at his lowest point?",
+      "reference": "'Show them who you really are.'",
+      "expected_facts": ["show them who you really are"]
+    },
+    {
+      "id": "h-in-07",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "What could the speaker do after 1 year, after 5 years, and after 7 years of consistency?",
+      "reference": "After 1 year: feeling better, more confident, much stronger. After 5 years: one-arm pull-ups, front levers, handstands — best shape of his life. After 7 years: able to teach hundreds of thousands of people.",
+      "expected_facts": ["one-arm pull-up", "front lever", "handstand", "hundreds of thousands"]
+    },
+    {
+      "id": "h-in-08",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "Describe Jonathan's progress month by month during his first three months in the Protagonist Academy.",
+      "reference": "Month 1: started getting stronger and a little more shredded. Month 2: looking even better, starting to feel more confident. Month 3: best shape of his life, strong, repping pull-ups, training the front lever.",
+      "expected_facts": ["month", "stronger", "confident", "best shape"]
+    },
+    {
+      "id": "h-in-09",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "How many years did the speaker's own comeback take, and how long does the academy claim it will take its students instead?",
+      "reference": "His journey took 7 years; the academy claims it will fast-track that into only 4 months.",
+      "expected_facts": ["7 years", "4 months"]
+    },
+    {
+      "id": "h-in-10",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "What was Jonathan's situation before he joined the academy, and what exactly did the speaker give him once he joined?",
+      "reference": "Before: insecure about his physique and confidence, had hired a personal trainer but saw no results. Given: a custom workout plan, a custom nutrition guide, and a gamified roadmap (boss battles, side quests, XP, loot).",
+      "expected_facts": ["personal trainer", "workout plan", "nutrition", "gamify"]
+    },
+    {
+      "id": "h-out-01",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How do I perform a front lever? Give me step-by-step form cues.",
+      "reference": "Front levers are only mentioned as something the speaker can do — the video never teaches the exercise. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "h-out-02",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What does the Protagonist Academy charge? Give me the exact price.",
+      "reference": "The video says only 'click the link in the description' — no price is ever stated. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "h-out-03",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What is the speaker's real name, and how old is he?",
+      "reference": "Never stated in the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "h-out-04",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Explain the Pareto principle and give me five examples of it.",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "h-out-05",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What year did Instagram launch?",
+      "reference": "Instagram is mentioned as a platform in the story, but its launch year is never stated. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "h-out-06",
+      "category": "out_of_scope",
+      "tag": "subjective",
+      "question": "Is the Protagonist Academy a scam? Would you recommend I buy it?",
+      "reference": "Subjective verdict; the video gives no evidence to judge by. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "h-out-07",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "What foods should I eat to get a six-pack?",
+      "reference": "A 'custom nutrition guide' is mentioned but no foods or diet advice are ever given. The tutor must refuse.",
+      "expected_facts": []
+    },
+    {
+      "id": "h-out-08",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Translate the word 'protagonist' into French.",
+      "reference": "Unrelated to the video. The tutor must refuse.",
+      "expected_facts": []
+    }
+  ]
+}
