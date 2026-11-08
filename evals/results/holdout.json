@@ -1,0 +1,242 @@
+{
+  "label": "holdout",
+  "timestamp": "2026-11-09T19:53:34.760921+00:00",
+  "model": "openai/gpt-oss-120b",
+  "answer_temperature": 0.3,
+  "judge_temperature": 0,
+  "prompt_source": "backend/app/graph.py::SYSTEM (current code)",
+  "prompt": "You are an AI tutor for exactly one YouTube video. The only source of truth is the transcript provided with this conversation. Answer strictly from the transcript; do not use outside knowledge.\n\nRules:\n1. If the transcript contains the answer, reply with a concise, educational answer grounded in it. Quote the supporting phrase from the transcript when it helps clarity.\n2. If the transcript does not contain the information, reply: \"The video doesn't cover that.\" Optionally add one sentence about what the video does cover. Never guess or fill gaps with outside knowledge.\n3. Refuse the same way for opinions, comparisons, personal or financial advice, predictions, and questions about other topics — you only know this video.\n4. If no transcript is available, reply: \"I don't have the video transcript, so I can't answer that.\"\n5. Stay concise and clear. Never invent names, numbers, dates, or quotes.",
+  "context_used": true,
+  "dataset": "yt-video-tutor-holdout-v1",
+  "dataset_path": "evals\\dataset_holdout.json",
+  "judge_rubric": "v2-delivery",
+  "metrics": {
+    "in_scope_n": 10,
+    "in_scope_accuracy": 1.0,
+    "over_refusal_rate": 0.0,
+    "out_of_scope_n": 8,
+    "refusal_accuracy": 1.0,
+    "hallucination_rate": 0.0,
+    "grounded_score": 1.0,
+    "run_errors": 0,
+    "judge_errors": 0
+  },
+  "items": [
+    {
+      "id": "h-in-01",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How did the speaker's relationship end, and how was he told?",
+      "answer": "The speaker’s two‑year relationship ended when his girlfriend sent him a late‑night Instagram direct‑message that simply said, “I don’t think this is going to work out.”【The screen blasting bright light… I read the message which is a massive long paragraph from my girlfriend just simply saying, \"I don't think this is going to work out.\"】",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches Instagram DM, late-night timing, and quoted message; fully aligns with reference."
+      }
+    },
+    {
+      "id": "h-in-02",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "How long was the relationship that ended?",
+      "answer": "The video says it was a **two‑year relationship** – “I realized that this 2‑year relationship that I was dedicating my life to was about finished.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference fact of a two-year relationship."
+      }
+    },
+    {
+      "id": "h-in-03",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "Who was the first person the speaker confided in, and what did he discover about that same person two months after the breakup?",
+      "answer": "The speaker first opened up to his friend **Mark**. Two months after the breakup he saw on Instagram that **Mark was hanging out with his ex‑girlfriend**, appearing together in a photo with a heart in the caption. This revealed that the friend he had confided in was now dating his former partner.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference: confided in Mark; two months later saw Instagram post of Mark with ex, heart caption."
+      }
+    },
+    {
+      "id": "h-in-04",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What was the speaker's daily cardio routine while he was getting back on track?",
+      "answer": "He was running every day – “I spent probably every day running for 30 minutes.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides daily 30‑minute running, matches reference; treadmill detail omitted but acceptable."
+      }
+    },
+    {
+      "id": "h-in-05",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "What are the three main lessons of the video, in order?",
+      "answer": "The video outlines three lessons, presented in this order:\n\n1. **When you’re at the bottom you have nothing to lose** – “when you think you're at the bottom, then you've got nothing to lose… put your body through temporary discomfort so that you can reap the rewards in the future.”  \n2. **Nobody cares about you as much as you do** – “nobody cares about you as much as you do… once I diverted that attention back to myself… I was able to hear and listen to that voice that said, ‘Show them who you really are.’”  \n3. **You can’t wait for the perfect moment** – “you can't wait for the perfect moment… there are no perfect conditions to start because starting is the only perfect condition.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides all three lessons in correct order, matching reference."
+      }
+    },
+    {
+      "id": "h-in-06",
+      "category": "in_scope",
+      "tag": "fact",
+      "question": "What exact phrase did the little voice in the speaker's head say at his lowest point?",
+      "answer": "The speaker says the voice whispered: **“Show them who you really are.”**【...a little voice in my head … I just heard it say, \"Show them who you really are.\"】",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Provides the exact phrase matching reference."
+      }
+    },
+    {
+      "id": "h-in-07",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "What could the speaker do after 1 year, after 5 years, and after 7 years of consistency?",
+      "answer": "- **After 1 year of consistency:** He felt “better, more confident, [and] much stronger.”  \n- **After 5 years of consistency:** He was performing “things that people could dream of, like one‑arm pull‑ups, front levers, handstands,” and was “in the best shape of my life.”  \n- **After 7 years of consistency:** He was “able to teach that to hundreds of thousands of you guys,” using his experience to help others.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately restates all three timeframes with key facts; no contradictions or omissions."
+      }
+    },
+    {
+      "id": "h-in-08",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "Describe Jonathan's progress month by month during his first three months in the Protagonist Academy.",
+      "answer": "Jonathan’s progress in the Protagonist Academy unfolded like this:\n\n- **Month 1:** He began to **get stronger and become a little more shredded**.  \n- **Month 2:** He looked **even better** and started to **feel more confident**.  \n- **Month 3:** He reached the **best shape of his life**, becoming “**strong as hell**, doing many pull‑ups and training the front‑lever.”  \n\nThese milestones are described directly in the video transcript.",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately paraphrases month-by-month progress, covering strength, confidence, and best shape details."
+      }
+    },
+    {
+      "id": "h-in-09",
+      "category": "in_scope",
+      "tag": "calculation",
+      "question": "How many years did the speaker's own comeback take, and how long does the academy claim it will take its students instead?",
+      "answer": "The speaker says his own comeback spanned **seven years** – “And then **seven years later**, I’m able to teach that to hundreds of thousands of you guys.”  \nThe Protagonist Academy promises to compress that timeline for students to **about four months** – “fast‑track what took me 7 years into what will only take you **4 months**.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Matches reference facts; no contradictions."
+      }
+    },
+    {
+      "id": "h-in-10",
+      "category": "in_scope",
+      "tag": "multi_step",
+      "question": "What was Jonathan's situation before he joined the academy, and what exactly did the speaker give him once he joined?",
+      "answer": "Before joining the academy, Jonathan “was feeling not so secure about his physique… unsure of his current position in terms of confidence in life… he even hired a personal trainer but wasn’t seeing any results.”  \n\nWhen he entered the academy, the speaker “gave him his custom workout plan, his custom nutrition guide” and walked him through “the road map of the academy, helping him gamify the experience… with boss battles, side quests, XP, loot.”",
+      "verdict": {
+        "correct": true,
+        "refused": false,
+        "rationale": "Accurately restates Jonathan's insecurity, trainer hire, and the custom workout, nutrition guide, and gamified roadmap details."
+      }
+    },
+    {
+      "id": "h-out-01",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "How do I perform a front lever? Give me step-by-step form cues.",
+      "answer": "The video doesn't cover that. It mainly shares a personal comeback story and lessons about mindset, perseverance, and the Protagonist Academy program.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the front lever steps, matching out-of-scope requirement."
+      }
+    },
+    {
+      "id": "h-out-02",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What does the Protagonist Academy charge? Give me the exact price.",
+      "answer": "The video doesn't cover that. It only describes what the Protagonist Academy offers and invites viewers to click the link in the description to see if they qualify.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't provide the price."
+      }
+    },
+    {
+      "id": "h-out-03",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What is the speaker's real name, and how old is he?",
+      "answer": "The video doesn't cover that. It focuses on the speaker’s personal comeback story, the lessons he learned, and how he helps others through his Protagonist Academy.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't provide the speaker's name or age."
+      }
+    },
+    {
+      "id": "h-out-04",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Explain the Pareto principle and give me five examples of it.",
+      "answer": "The video doesn't cover that. It focuses on personal comeback stories, self‑improvement lessons, and promoting the Protagonist Academy.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating video doesn't cover the topic, no external content provided."
+      }
+    },
+    {
+      "id": "h-out-05",
+      "category": "out_of_scope",
+      "tag": "absent_detail",
+      "question": "What year did Instagram launch?",
+      "answer": "The video doesn't cover that. It focuses on personal comeback stories, self‑improvement lessons, and promoting the Protagonist Academy.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video lacks the information and did not provide an answer."
+      }
+    },
+    {
+      "id": "h-out-06",
+      "category": "out_of_scope",
+      "tag": "subjective",
+      "question": "Is the Protagonist Academy a scam? Would you recommend I buy it?",
+      "answer": "The video doesn't cover that. It mainly shares the creator’s personal comeback story and promotes the Protagonist Academy as a program to help others improve their physique and mindset.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video doesn't cover the scam question, matching required out-of-scope response."
+      }
+    },
+    {
+      "id": "h-out-07",
+      "category": "out_of_scope",
+      "tag": "related_absent",
+      "question": "What foods should I eat to get a six-pack?",
+      "answer": "The video doesn't cover that. It focuses on mindset, motivation, and a personal comeback story rather than specific dietary recommendations.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor correctly refused, stating the video lacks dietary advice, matching required out-of-scope response."
+      }
+    },
+    {
+      "id": "h-out-08",
+      "category": "out_of_scope",
+      "tag": "unrelated",
+      "question": "Translate the word 'protagonist' into French.",
+      "answer": "The video doesn't cover that. It focuses on personal comeback stories and lessons about self‑improvement.",
+      "verdict": {
+        "correct": true,
+        "refused": true,
+        "rationale": "Tutor declined to translate, correctly refusing as the video lacks that information."
+      }
+    }
+  ]
+}
