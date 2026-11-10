@@ -42,7 +42,7 @@ Built as a full-stack AI application using **FastAPI** (backend), **Next.js 16**
 | Feature | Description |
 |---------|-------------|
 | 📝 **Transcript Extraction** | Captions-first via `youtube-transcript-api`, fallback to audio download + Groq Whisper |
-| 🤖 **Grounded Q&A** | LangGraph pipeline — answers only from the transcript, refuses out-of-scope questions — **measured: 100% correct refusals, 0% hallucination** on the 40-question eval set ([`evals/`](evals/)) |
+| 🤖 **Grounded Q&A** | LangGraph pipeline — answers only from the transcript, refuses out-of-scope questions — **measured: 16/16 correct refusals on a 48-question dev set (single transcript), 8/8 on a held-out second video** ([`evals/`](evals/)) |
 | 🧠 **Multi-turn Memory** | Thread-based conversation memory persists across messages |
 | 🎤 **Voice Input** | Browser mic → Sarvam AI Saaras v3 (STT) — auto-detects Indian languages |
 | 🔊 **Voice Output** | Deepgram Aura (TTS) — hear the answer spoken aloud (English) |
@@ -56,22 +56,33 @@ Built as a full-stack AI application using **FastAPI** (backend), **Next.js 16**
 
 ## 📊 Evaluation
 
-The Grounded Q&A claim is measured, not asserted. [`evals/`](evals/) contains a fixed 40-question set — 24 answerable only from the transcript, 16 out-of-scope (unrelated questions, related-but-absent details, opinions, personal advice) — run against a fixed transcript and scored by an LLM judge with a delivery-based rubric (an answer only "refuses correctly" if it delivers **no** outside-knowledge content). Every question, answer, and verdict is logged in `evals/results/*.json`.
+The Grounded Q&A claim is measured, not asserted. Method, datasets, and per-answer logs live in [`evals/`](evals/) — every number below traces to a logged answer in `evals/results/*.json`.
 
-| Metric | Original prompt | Grounding prompt | Δ |
-|---|---:|---:|---:|
-| In-scope accuracy (n=24) | 100% | 100% | — |
-| Over-refusal (in-scope) | 0% | 0% | — |
-| Refusal accuracy (n=16) | 81.2% | **100%** | **+18.8pp** |
-| Hallucination rate (out-of-scope) | 18.8% | **0%** | **−18.8pp** |
-| **Grounded score (n=40)** | **92.5%** | **100%** | **+7.5pp** |
+**Dev set — 48 questions, one transcript** (32 answerable, 16 out-of-scope). The grounding prompt was tuned against 40 of these, so this is a development set. Single run per prompt, answer temperature 0.3. Reported as counts:
+
+| | Original prompt | Grounding prompt (shipped) |
+|---|---:|---:|
+| In-scope correct (n=32) | 32/32 | 32/32 |
+| Correct refusals, out-of-scope (n=16) | 11/16 | **16/16** |
+| Grounded score (n=48) | 43/48 | **48/48** |
+
+**Holdout — 18 questions on a second, unseen video** (real YouTube transcript; questions written after the prompt was frozen; run once, no iteration):
+
+| Grounding prompt, holdout | Result |
+|---|---:|
+| In-scope correct (n=10) | 10/10 |
+| Correct refusals (n=8) | 8/8 |
+
+**Judge check:** scoring uses an LLM judge of the same model family as the answerer, so a hand-graded sample (all 16 out-of-scope + 10 in-scope answers) verifies it — agreement **26/26** ([`evals/human_grading.md`](evals/human_grading.md)).
+
+**Caveats:** small n — counts, not rates; two transcripts total; the dev set is where the prompt was tuned; one run per condition (refusal counts wobbled ±2 between repeated runs of the same prompt); in-scope hit the ceiling (32/32) under *both* prompts, so this eval currently separates the prompts only on refusals.
 
 Reproduce (requires `GROQ_API_KEY`):
 
 ```bash
 python evals/run_eval.py run --label before --prompt-file evals/prompts/baseline.txt
 python evals/run_eval.py run --label after
-python evals/run_eval.py compare evals/results/before.json evals/results/after.json
+python evals/run_eval.py run --label holdout --dataset evals/dataset_holdout.json
 ```
 
 ---
