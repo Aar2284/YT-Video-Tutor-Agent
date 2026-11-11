@@ -192,6 +192,7 @@ YT-Video-Tutor-Agent/
 ├── 📂 backend/                     # 🐍 Python FastAPI backend
 │   ├── 📄 README.md                # Backend documentation
 │   ├── 📄 requirements.txt         # Python dependencies
+│   ├── 📄 Dockerfile               # 🐳 Container build
 │   ├── 📂 app/
 │   │   ├── 📄 config.py            # ⚙️  Environment & constants
 │   │   ├── 📄 auth.py              # 🔐 Password hashing + JWT
@@ -202,6 +203,17 @@ YT-Video-Tutor-Agent/
 │   │   ├── 📄 speech.py            # 🎤 STT / TTS (Sarvam + Deepgram)
 │   │   └── 📄 main.py              # 🌐 FastAPI app & endpoints
 │   └── 📂 data/                    # SQLite database (auto-created)
+│
+├── 📂 evals/                       # 📊 Grounding eval harness (dev + holdout)
+│   ├── 📄 README.md                # Eval method & usage
+│   ├── 📄 run_eval.py              # Runner + LLM judge + compare/rejudge
+│   ├── 📄 dataset.json             # Dev set — 48 questions (solar video)
+│   ├── 📄 dataset_holdout.json     # Holdout — 18 questions (frozen prompt)
+│   ├── 📄 transcript.txt           # Dev transcript fixture
+│   ├── 📄 transcript_holdout.txt   # Holdout transcript (real YouTube video)
+│   ├── 📄 human_grading.md         # Judge agreement check (26/26)
+│   ├── 📂 prompts/                 # baseline.txt + grounded_v2.txt
+│   └── 📂 results/                 # Per-run JSON logs (auditable)
 │
 ├── 📂 frontend/                    # ⚛️  Next.js React frontend
 │   ├── 📄 package.json             # Node dependencies
