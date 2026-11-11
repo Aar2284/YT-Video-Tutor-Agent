@@ -61,7 +61,8 @@ backend/
 │   └── main.py            # 🌐 FastAPI app & endpoints
 ├── data/
 │   └── app.db             # 💾 SQLite database (auto-created)
-└── requirements.txt       # 📋 Python dependencies
+├── requirements.txt       # 📋 Python dependencies
+└── Dockerfile             # 🐳 Container image build
 ```
 
 ---
